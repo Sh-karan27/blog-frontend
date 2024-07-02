@@ -36,9 +36,11 @@ const Navbar = () => {
               key={curr.name}
               className='flex items-center justify-center gap-1 font-semibold hover:underline'>
               <NavLink to={curr.link}>{curr.name}</NavLink>
-              {(curr.name === 'Home' || curr.name === 'Blog') && (
-                <IoIosArrowDown />
-              )}
+              <button>
+                {(curr.name === 'Home' || curr.name === 'Blog') && (
+                  <IoIosArrowDown />
+                )}
+              </button>
             </li>
           ))}
         </ul>
