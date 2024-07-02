@@ -5,6 +5,7 @@ import Home from './sections/Home';
 import About from './sections/About';
 import Blog from './sections/Blog';
 import Footer from './components/Footer';
+import ContactUs from './sections/ContactUs';
 import Error from './sections/Error';
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/blogs' element={<Blog />} />
+        <Route path='/contact' element={<ContactUs />} />
         <Route path='*' element={<Error />} />
       </Routes>
       <Footer />
