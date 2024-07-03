@@ -33,10 +33,10 @@ const FoodAndTravel = () => {
                   </p>
                 </div>
                 <div className='w-full flex items-center justify-between p-2'>
-                  <span className='flex items-center justify-center  text-xl '>
+                  <span className='flex items-center justify-center  text-xl text-gray-600'>
                     Read More <MdArrowRightAlt />
                   </span>
-                  <div className='flex items-center justify-center text-2xl'>
+                  <div className='flex items-center justify-center text-2xl text-gray-600'>
                     <CiShare2 />
                     <CiHeart />
                   </div>
