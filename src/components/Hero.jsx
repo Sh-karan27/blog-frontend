@@ -6,21 +6,21 @@ const Hero = () => {
 
   return (
     <div className='h-screen flex items-center justify-center relative overflow-hidden'>
-      <div className='w-[90%] h-full flex flex-col items-center justify-evenly    p-5'>
+      <div className='w-[90%] h-full flex flex-col items-center justify-evenly p-5'>
         <div className='w-full flex items-start justify-start'>
-          <div className='  text-black text-5xl font-semibold w-[700px] '>
+          <div className='text-black text-5xl font-semibold w-full sm:w-[700px]'>
             Step into the world of Blogxpress, where our
             <FlipWords words={words} />
             come to life.
           </div>
         </div>
-        <div className='w-full flex items-center justify-evenly '>
+        <div className='w-full flex flex-wrap items-center justify-evenly'>
           {heroImage.map((curr, i) => (
             <div
               key={i}
-              className={`w-[400px] h-[400px] flex flex-col items-center ${
+              className={`w-full sm:w-[400px] h-[400px] flex flex-col items-center ${
                 i % 2 !== 0 ? 'justify-start' : 'justify-center'
-              } `}>
+              }`}>
               <img
                 src={curr}
                 alt='hero'

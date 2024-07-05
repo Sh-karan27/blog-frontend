@@ -9,7 +9,7 @@ import { explorMor2 } from '../constants/index.jsx';
 const SportsAndPodcast = () => {
   return (
     <div className=' h-full flex items-center justify-center '>
-      <div className='w-full h-full flex flex-col items-center justify-center p-4'>
+      <div className='w-[90%] h-full flex flex-col items-center justify-center p-4'>
         <div className='w-full flex flex-col items-start justify-start '>
           <h3 className=' text-[#FEAD6E] font-semibold text-xl'>
             SPORTS & PODCAST
@@ -33,16 +33,18 @@ const SportsAndPodcast = () => {
             speed='slow'
           />
         </div>
-        <div className='w-full h-[400px] flex items-center justify-center gap-10'>
+        <div className='w-full h-[400px] flex flex-col md:flex-row items-center justify-center gap-4 md:gap-10'>
           {explorMor2.map((curr, i) => (
             <div
-              className={` ${
-                i === 1 ? 'bg-black rounded-3xl ' : 'bg-[#A192f3]'
-              } ${
-                i === 0 ? 'rounded-r-3xl ' : 'rounded-l-3xl'
-              }  h-full p-4 text-white flex flex-col items-left text-wrap justify-center`}>
-              <h1 className='text-3xl font-semibold'>{curr.title}</h1>
-              <p className='text-md'>{curr.description}</p>
+              key={i}
+              className={`${
+                i === 1 ? 'bg-black rounded-3xl' : 'bg-[#A192f3]'
+              } ${i === 0 ? 'rounded-r-3xl' : 'rounded-l-3xl'} 
+      h-full w-full md:w-auto p-4 text-white flex flex-col items-left justify-center`}>
+              <h1 className='text-xl md:text-3xl font-semibold'>
+                {curr.title}
+              </h1>
+              <p className='text-sm md:text-md'>{curr.description}</p>
             </div>
           ))}
         </div>

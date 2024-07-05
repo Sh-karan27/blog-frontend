@@ -6,10 +6,10 @@ import { CiHeart } from 'react-icons/ci';
 
 const FoodAndTravel = () => {
   return (
-    <div className='h-full flex items-center justify-center'>
+    <div className='min-h-screen flex items-center justify-center'>
       <div className='w-[90%] h-full flex flex-col items-center justify-center p-4'>
-        <div className='w-full flex flex-col items-start justify-start '>
-          <h3 className=' text-[#FEAD6E] font-semibold text-xl'>
+        <div className='w-full flex flex-col items-start justify-start'>
+          <h3 className='text-[#FEAD6E] font-semibold text-xl'>
             FOOD & TRAVEL BLOG
           </h3>
           <h2 className='text-3xl font-semibold'>
@@ -19,21 +19,25 @@ const FoodAndTravel = () => {
             Travel in the simple article.
           </h2>
         </div>
-        <div className='grid grid-cols-4  w-[65%] h-full  place-items-center  gap-5 mt-5'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full h-full place-items-center gap-5 mt-5'>
           {foodAndTravel.map((curr, i) =>
             curr.description ? (
               <div
                 key={i}
-                className=' flex flex-col items-center justify-center  overflow-hidden rounded-xl shadow-custom '>
-                <img src={curr.image} alt='' className='w-[300px] h-[300px]' />
+                className='flex flex-col items-center justify-center overflow-hidden rounded-xl shadow-custom w-full sm:w-[300px]'>
+                <img
+                  src={curr.image}
+                  alt=''
+                  className='w-full h-[300px] object-cover'
+                />
                 <div className='flex flex-col items-start justify-start p-2'>
                   <h1 className='font-bold text-xl'>{curr.title}</h1>
-                  <p className=' text-wrap text-sm text-gray-400'>
+                  <p className='text-wrap text-sm text-gray-400'>
                     {curr.description}
                   </p>
                 </div>
                 <div className='w-full flex items-center justify-between p-2'>
-                  <span className='flex items-center justify-center  text-xl text-gray-600'>
+                  <span className='flex items-center justify-center text-xl text-gray-600'>
                     Read More <MdArrowRightAlt />
                   </span>
                   <div className='flex items-center justify-center text-2xl text-gray-600'>
@@ -45,11 +49,11 @@ const FoodAndTravel = () => {
             ) : (
               <div
                 key={i}
-                className='flex flex-col items-center justify-center'>
+                className='flex flex-col items-center justify-center w-full sm:w-[300px]'>
                 <img
                   src={curr.image}
                   alt=''
-                  className='rounded-xl shadow-custom'
+                  className='rounded-xl shadow-custom w-full h-[300px] object-cover'
                 />
               </div>
             )
