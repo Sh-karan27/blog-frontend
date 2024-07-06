@@ -25,7 +25,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="h-screen w-full flex items-center justify-center p-4">
+    <div className="h-screen w-full flex items-center justify-center p-4 mt-4">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg flex flex-col lg:flex-row overflow-hidden">
         <img
           src={Contact}
