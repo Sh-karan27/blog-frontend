@@ -4,7 +4,7 @@ import { TbArrowWaveRightDown } from 'react-icons/tb';
 import shoes from '../assets/shoes.jpg';
 const NewsAndTrend = () => {
   return (
-    <div className='h-full w-full flex flex-col items-center justify-center relative p-4'>
+    <div className='h-full mt-5 w-full flex flex-col items-center justify-center relative p-4'>
       <div className='w-[90%]  h-full flex flex-col items-center justify-center'>
         <div className='w-full flex flex-col items-start justify-start mb-4'>
           <h3 className='text-[#FEAD6E] font-semibold text-xl'>
