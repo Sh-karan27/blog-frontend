@@ -52,8 +52,11 @@ const Navbar = () => {
             ))}
           </ul>
           <div className="hidden md:flex items-center justify-end">
-            <button className="border border-black hover:bg-black hover:text-white rounded-3xl px-5 py-1 font-semibold">
-              <NavLink to="/contact">LogIn</NavLink>
+            <button
+              onClick={() => localStorage.removeItem("accessToken")}
+              className="border border-black hover:bg-black hover:text-white rounded-3xl px-5 py-1 font-semibold"
+            >
+              LogIn
             </button>
           </div>
           <div className="md:hidden flex items-center justify-end absolute right-2 top-0">
