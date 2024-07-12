@@ -9,6 +9,7 @@ import ContactUs from './sections/ContactUs';
 import Error from './sections/Error';
 import Login from './components/LogIn';
 import { useSelector } from 'react-redux';
+import Dashboard from './sections/Dashboard';
 
 const ProtectedRoute = ({ element }) => {
   const { token } = useSelector((state) => state.auth);
@@ -24,6 +25,10 @@ const App = () => {
         <Route path='/' element={<ProtectedRoute element={<Home />} />} />
         <Route path='/about' element={<ProtectedRoute element={<About />} />} />
         <Route path='/blogs' element={<ProtectedRoute element={<Blog />} />} />
+        <Route
+          path='/dashboard'
+          element={<ProtectedRoute element={<Dashboard />} />}
+        />
         <Route
           path='/contact'
           element={<ProtectedRoute element={<ContactUs />} />}
