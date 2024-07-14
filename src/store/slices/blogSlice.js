@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../axiosInstance';
-import { build } from 'vite';
+
 
 const initialState = {
   loading: null,
@@ -8,7 +8,7 @@ const initialState = {
   data: null,
 };
 
-const userBlog = createAsyncThunk(
+export const userBlog = createAsyncThunk(
   '/blog/fetchUserBlog',
   async ({ userId }, { rejectWithValue }) => {
     try {
