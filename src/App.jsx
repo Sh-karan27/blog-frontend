@@ -19,29 +19,23 @@ const ProtectedRoute = ({ element }) => {
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<ProtectedRoute element={<Home />} />} />
-        <Route path="/about" element={<ProtectedRoute element={<About />} />} />
-        <Route path="/blogs" element={<ProtectedRoute element={<Blog />} />} />
-        <Route
-          path="/dashboard"
-          element={<ProtectedRoute element={<Dashboard />} />}
-        />
-        <Route
-          path="/contact"
-          element={<ProtectedRoute element={<ContactUs />} />}
-        />
-        <Route
-          path="/dashboard/blogs"
-          element={<ProtectedRoute element={<DashboardBlog />} />}
-        />
-        <Route path="*" element={<Error />} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+    <div className="flex flex-col min-h-screen">
+      <BrowserRouter>
+        <Navbar />
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<ProtectedRoute element={<Home />} />} />
+            <Route path="/about" element={<ProtectedRoute element={<About />} />} />
+            <Route path="/blogs" element={<ProtectedRoute element={<Blog />} />} />
+            <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+            <Route path="/contact" element={<ProtectedRoute element={<ContactUs />} />} />
+            <Route path="*" element={<Error />} />
+          </Routes>
+        </div>
+        <Footer />
+      </BrowserRouter>
+    </div>
   );
 };
 

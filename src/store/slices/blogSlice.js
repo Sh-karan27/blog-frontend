@@ -14,7 +14,7 @@ export const userBlog = createAsyncThunk(
     try {
       const response = await axiosInstance.get(`/blog/u/${userId}`);
       console.log(response.data.data);
-      return response.data.data;
+      return response.data;
     } catch (error) {
       rejectWithValue(error.response.data);
     }
