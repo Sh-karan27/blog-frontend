@@ -7,6 +7,9 @@ import {
 } from '../store/slices/followerSlice';
 import { userProfileNav } from '../constants';
 import DashboardBlog from '../components/DashboardBlog';
+import DashboardPlaylist from '../components/DashboardPlaylist';
+import DashboardBookmark from '../components/DashboardBookmark';
+import WatchHistory from '../components/WatchHistory';
 
 const Dashboard = () => {
   const [selectComponent, setSelectComponent] = useState('Blogs');
@@ -33,14 +36,18 @@ const Dashboard = () => {
     switch (selectComponent) {
       case 'Blogs':
         return user ? <DashboardBlog id={user._id} /> : <div>Loading...</div>;
-      // case 'Playlists':
-      //   return <Playlists />;
-      // case 'Bookmark':
-      //   return <Bookmark />;
-      // case 'WatchHistory':
-      //   return <WatchHistory />;
+      case 'Playlists':
+        return user ? (
+          <DashboardPlaylist id={user._id} />
+        ) : (
+          <div>Loading...</div>
+        );
+      case 'Bookmark':
+        return user ? <DashboardBookmark user={user} /> : <div>Loading...</div>;
+      case 'WatchHistory':
+        return user ? <WatchHistory user={user} /> : <div>Loading...</div>;
       default:
-        return <Blogs />;
+        return <DashboardBlog />;
     }
   };
 
@@ -84,7 +91,7 @@ const Dashboard = () => {
         </div>
       </div>
       <div className='w-full sm:w-3/4 border-b flex items-center justify-center sm:justify-start mt-10 px-4 sm:px-0 p-2'>
-        <ul className='flex items-center justify-between w-full sm:w-1/2'>
+        <ul className='flex flex-wrap items-center justify-center sm:justify-start w-full gap-4'>
           {userProfileNav.map((curr, i) => (
             <li key={i}>
               <button
