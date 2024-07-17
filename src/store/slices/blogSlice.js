@@ -12,7 +12,7 @@ export const userBlog = createAsyncThunk(
   async ({ userId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/blog/u/${userId}`);
-      console.log(response.data.data);
+      // console.log(response.data.data);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -42,22 +42,6 @@ export const getBlogByID = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
-    }
-  }
-);
-export const getBlogsByIDs = createAsyncThunk(
-  'blog/getBlogsByIDs',
-  async (blogIds, { dispatch, rejectWithValue }) => {
-    try {
-      const blogs = [];
-      for (const blogId of blogIds) {
-        const blog = await dispatch(getBlogByID({ blogId })).unwrap();
-        blogs.push(blog);
-      }
-      console.log(blogs);
-      return blogs;
-    } catch (error) {
-      return rejectWithValue(error);
     }
   }
 );
@@ -100,19 +84,6 @@ const blogSlice = createSlice({
       })
       .addCase(getBlogByID.fulfilled, (state, action) => {
         state.loading = null;
-        state.error = null;
-        state.data = action.payload;
-      })
-      .addCase(getBlogsByIDs.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getBlogsByIDs.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      .addCase(getBlogsByIDs.fulfilled, (state, action) => {
-        state.loading = false;
         state.error = null;
         state.data = action.payload;
       });
