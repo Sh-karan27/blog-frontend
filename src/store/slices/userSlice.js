@@ -6,6 +6,8 @@ const initialState = {
   token: localStorage.getItem('accessToken') || null,
   loading: false,
   error: null,
+  watchHistory: [],
+  bookmarks: [],
 };
 
 export const loginUser = createAsyncThunk(
@@ -22,6 +24,32 @@ export const loginUser = createAsyncThunk(
       console.log(response.data);
 
       return { user, token: accessToken };
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const userWatchHistory = createAsyncThunk(
+  'user/watchHistory',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/users/history');
+      console.log(response.data.data);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const userBookmarks = createAsyncThunk(
+  '/user/bookmarks',
+  async ({ userId }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/bookmark/user/${userId}`);
+      console.log(response.data);
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -88,13 +116,40 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(userProfile.rejected, (state,action) => {
+      .addCase(userProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
       .addCase(userProfile.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
+        state.error = null;
+      })
+
+      .addCase(userWatchHistory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userWatchHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(userWatchHistory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.watchHistory = action.payload;
+        state.error = null;
+      })
+      .addCase(userBookmarks.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userBookmarks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(userBookmarks.fulfilled, (state, action) => {
+        state.loading = false;
+        state.bookmarks = action.payload;
         state.error = null;
       });
   },

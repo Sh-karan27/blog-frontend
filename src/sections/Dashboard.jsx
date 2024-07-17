@@ -43,9 +43,13 @@ const Dashboard = () => {
           <div>Loading...</div>
         );
       case 'Bookmark':
-        return user ? <DashboardBookmark user={user} /> : <div>Loading...</div>;
+        return user ? <DashboardBookmark userId={user._id} /> : <div>Loading...</div>;
       case 'WatchHistory':
-        return user ? <WatchHistory user={user} /> : <div>Loading...</div>;
+        return user ? (
+          <WatchHistory history={user._id} />
+        ) : (
+          <div>Loading...</div>
+        );
       default:
         return <DashboardBlog />;
     }

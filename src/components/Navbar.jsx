@@ -22,6 +22,10 @@ const navLinks = [
     name: 'ContactUs',
     link: '/contact',
   },
+  {
+    name: 'Dashboard',
+    link: '/dashboard',
+  },
 ];
 
 const Navbar = () => {

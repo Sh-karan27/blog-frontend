@@ -49,7 +49,7 @@ const DashboardBlog = ({ id }) => {
           <div className='flex flex-col items-start justify-start p-4'>
             <div className='w-full flex flex-col items-start justify-start '>
               <h1 className='text-xl font-semibold'>{curr.title}</h1>
-              {/* <p>{truncateDescription(curr.description, 50)}</p> */}
+              <p>{truncateDescription(curr.description, 100)}</p>
             </div>
             <div className='w-full flex flex-col items-start justify-start  gap-5'>
               <div className='flex items-center justify-between w-full'>
