@@ -8,10 +8,25 @@ import { NavLink } from 'react-router-dom';
 import { MdArrowRightAlt } from 'react-icons/md';
 import { MdDeleteForever } from 'react-icons/md';
 import { CiEdit } from 'react-icons/ci';
+import EditBlogBox from './EditBlogBox';
+import loadingImg from '../assets/loading.gif';
 
 const DashboardBlog = ({ id }) => {
+  const [blogSelectedForEdit, setBlogSelectedForEdit] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.blog);
+
+  const onClose = () => {
+    setIsModalOpen(false);
+    setBlogSelectedForEdit(null);
+  };
+
+  const onUpdate = () => {
+    if (id) {
+      dispatch(userBlog({ userId: id }));
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -20,7 +35,7 @@ const DashboardBlog = ({ id }) => {
   }, [id, dispatch]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <img src={loadingImg} alt='..loading' />;
   }
 
   if (error) {
@@ -34,6 +49,11 @@ const DashboardBlog = ({ id }) => {
   const handleToggleBlogStatus = async (blogId) => {
     await dispatch(toggleBlogPublished({ blogId }));
     dispatch(userBlog({ userId: id }));
+  };
+
+  const handleEditClick = (blog) => {
+    setIsModalOpen(!isModalOpen);
+    setBlogSelectedForEdit(blog);
   };
 
   return (
@@ -58,7 +78,7 @@ const DashboardBlog = ({ id }) => {
               <button>
                 <MdDeleteForever className='text-2xl text-gray-500 font-semibold flex' />
               </button>
-              <button>
+              <button onClick={() => handleEditClick(curr)}>
                 <CiEdit className='text-2xl text-gray-500 font-semibold ' />
               </button>
               <button onClick={() => handleToggleBlogStatus(curr._id)}>
@@ -83,6 +103,14 @@ const DashboardBlog = ({ id }) => {
           </div>
         ))}
       </div>
+      {blogSelectedForEdit && (
+        <EditBlogBox
+          blog={blogSelectedForEdit}
+          isOpen={isModalOpen}
+          onClose={onClose}
+          onUpdate={onUpdate}
+        />
+      )}
     </div>
   );
 };
