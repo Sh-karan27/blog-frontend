@@ -10,6 +10,7 @@ import DashboardBlog from '../components/DashboardBlog';
 import DashboardPlaylist from '../components/DashboardPlaylist';
 import DashboardBookmark from '../components/DashboardBookmark';
 import WatchHistory from '../components/WatchHistory';
+import { ExpandableCardDemo } from '../components/ExpandableCardDemo';
 
 const Dashboard = () => {
   const [selectComponent, setSelectComponent] = useState('Blogs');
@@ -43,7 +44,11 @@ const Dashboard = () => {
           <div>Loading...</div>
         );
       case 'Bookmark':
-        return user ? <DashboardBookmark userId={user._id} /> : <div>Loading...</div>;
+        return user ? (
+          <DashboardBookmark userId={user._id} />
+        ) : (
+          <div>Loading...</div>
+        );
       case 'WatchHistory':
         return user ? (
           <WatchHistory history={user._id} />
@@ -107,7 +112,7 @@ const Dashboard = () => {
           ))}
         </ul>
       </div>
-      <div className='w-full sm:w-3/4 mt-10 flex items-center justify-center px-4 sm:px-0'>
+      <div className='w-full h-full sm:w-3/4 mt-10 flex items-center justify-center  sm:px-0'>
         {renderComponent()}
       </div>
     </div>

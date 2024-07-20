@@ -19,6 +19,23 @@ export const userBlog = createAsyncThunk(
     }
   }
 );
+export const updateBlog = createAsyncThunk(
+  'blog/updateBlog',
+  async ({ blogId, formData }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(`/blog/${blogId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(formData);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const toggleBlogPublished = createAsyncThunk(
   '/blog/toggleBlogStatus',
@@ -34,11 +51,12 @@ export const toggleBlogPublished = createAsyncThunk(
   }
 );
 
-export const getBlogByID = createAsyncThunk(
+export const getBlogById = createAsyncThunk(
   '/blog/:blogId',
   async ({ blogId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/blog/${blogId}`);
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -74,15 +92,28 @@ const blogSlice = createSlice({
       .addCase(toggleBlogPublished.rejected, (state, action) => {
         state.error = action.payload;
       })
-      .addCase(getBlogByID.pending, (state) => {
+      .addCase(getBlogById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getBlogByID.rejected, (state, action) => {
+      .addCase(getBlogById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getBlogByID.fulfilled, (state, action) => {
+      .addCase(getBlogById.fulfilled, (state, action) => {
+        state.loading = null;
+        state.error = null;
+        state.data = action.payload;
+      })
+      .addCase(updateBlog.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateBlog.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateBlog.fulfilled, (state, action) => {
         state.loading = null;
         state.error = null;
         state.data = action.payload;
