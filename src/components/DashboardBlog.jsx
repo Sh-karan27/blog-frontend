@@ -36,16 +36,6 @@ const DashboardBlog = ({ id }) => {
     dispatch(userBlog({ userId: id }));
   };
 
-  const handleEditClick = (blog) => {
-    setSelectedBlog(blog);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedBlog(null);
-  };
-
   return (
     <div className='w-[90%] h-full flex flex-col items-center justify-center p-4 '>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full h-full place-items-center gap-5 mt-5'>
@@ -68,7 +58,7 @@ const DashboardBlog = ({ id }) => {
               <button>
                 <MdDeleteForever className='text-2xl text-gray-500 font-semibold flex' />
               </button>
-              <button onClick={() => handleEditClick(curr)}>
+              <button>
                 <CiEdit className='text-2xl text-gray-500 font-semibold ' />
               </button>
               <button onClick={() => handleToggleBlogStatus(curr._id)}>
