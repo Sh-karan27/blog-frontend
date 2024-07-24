@@ -1,110 +1,87 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { userBookmarks } from '../store/slices/userSlice';
+import { toggleBookmark, userBookmarks } from '../store/slices/userSlice';
 import { FaBookReader } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
-import { RiEyeOffFill } from 'react-icons/ri';
 import { MdArrowRightAlt } from 'react-icons/md';
+import { CiBookmark } from 'react-icons/ci';
+import Loading from './Loading';
+
 const DashboardBookmark = ({ userId }) => {
   const dispatch = useDispatch();
   const { bookmarks, error, loading } = useSelector((state) => state.auth);
 
-  const fetchUserBookmarks = useCallback(() => {
-    if (!bookmarks || bookmarks.length === 0) {
-      dispatch(userBookmarks({ userId }));
-    }
-  }, [dispatch, bookmarks, userId]);
+const fetchUserBookmarks = useCallback(() => {
+    console.log('Fetching bookmarks for userId:', userId);
+    dispatch(userBookmarks({ userId }));
+  }, [dispatch, userId]);
 
   useEffect(() => {
     fetchUserBookmarks();
   }, [fetchUserBookmarks]);
 
-  if (loading) {
-    return <div>Loading......</div>;
-  }
-  if (!Array.isArray(bookmarks)) {
-    return <div>No blogs available</div>;
-  }
+   if (loading) {
+     return <Loading />;
+   }
 
   if (error) {
-    return <div>Loading......</div>;
+    return <div>error</div>;
   }
+  if (bookmarks.length === 0) {
+    return <div>No bookmarks available</div>;
+  }
+
+  const handleClick = (blogId) => {
+    dispatch(toggleBookmark({ blogId })).then(() => {
+      fetchUserBookmarks();
+    });
+  };
   console.log(bookmarks);
 
   return (
-    <div className='w-[90%] h-full flex flex-col items-center justify-center p-4 '>
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full h-full place-items-center gap-5 mt-5'>
-        {bookmarks.map((curr, i) =>
-          i % 2 === 0 ? (
-            <div
-              key={i}
-              className='flex flex-col items-center justify-center overflow-hidden rounded-xl shadow-custom w-full sm:w-[300px]'>
+    <div className='w-full max-w-screen-lg mx-auto p-4 flex flex-col items-center gap-10'>
+      {bookmarks.map((curr, i) => (
+        <div
+          key={i}
+          className='flex flex-col md:flex-row items-center md:items-start justify-between w-full border-b p-4 gap-2'>
+          <div className='flex flex-col items-start justify-start p-4 w-full md:w-1/2 gap-2'>
+            <h1 className='font-bold text-lg mb-2'>{curr.title}</h1>
+            <div className='w-full flex items-center justify-left gap-2'>
               <img
-                src={curr.coverImage.url}
+                src={curr.author.profileImage.url}
                 alt=''
-                className='w-full h-[300px] object-cover'
+                className='w-10 rounded-full'
               />
-              <div className='flex flex-col items-start justify-start p-2'>
-                <h1 className='font-bold text-xl'>{curr.title}</h1>
-                <p className='text-wrap text-sm text-gray-400'>
-                  {curr.description}
-                </p>
-              </div>
-              <div className='w-full flex itmes-center justify-left p-2'>
-                <h1 className='text-xl font-semibold flex items-center gap-1 text-gray-500'>
-                  <FaBookReader className='text-blue-500' />
-                  <span className='text-gray-500'>{curr.views}</span>
-                </h1>
-              </div>
-              <div className='w-full flex items-center justify-between p-2'>
-                <div className='flex items-center justify-center gap-1'>
-                  <img
-                    src={curr.author.profileImage.url}
-                    className='w-10 rounded-full'
-                    alt='profile'
-                  />
-                  <p className='underline text-md text-blue-500'>
-                    {curr.author.username}
-                  </p>
-                </div>
-                <NavLink to={`/blog/${curr._id}`}>
-                  <span className='flex items-center justify-center text-sm text-gray-600'>
-                    Read More <MdArrowRightAlt />
-                  </span>
-                </NavLink>
-              </div>
+              <h1 className='text-blue-500 font-semibold'>
+                {curr.author.username}
+              </h1>
             </div>
-          ) : (
-            <div
-              key={i}
-              className='flex flex-col items-center justify-center w-full sm:w-[300px] relative'>
-              <img
-                src={curr.coverImage.url}
-                alt=''
-                className='rounded-xl shadow-custom w-full h-[300px] object-cover'
-              />
-
-              <div className='w-full flex items-center justify-between p-2 bottom-0 absolute'>
-                <div className='flex items-center justify-center gap-1'>
-                  <img
-                    src={curr.author.profileImage.url}
-                    className='w-10 rounded-full'
-                    alt='profile'
-                  />
-                  <p className='underline text-md text-blue-500'>
-                    {curr.author.username}
-                  </p>
-                </div>
-                <NavLink to={`/blog/${curr._id}`}>
-                  <span className='flex items-center justify-center text-sm text-gray-600'>
-                    Read More <MdArrowRightAlt />
-                  </span>
-                </NavLink>
-              </div>
+            <p className='text-sm text-gray-600 mb-4 line-clamp-3'>
+              {curr.description}
+            </p>
+            <div className='flex items-center justify-between w-full'>
+              <h1 className='text-sm text-gray-500 flex items-center gap-1'>
+                <FaBookReader className='text-blue-500' />
+                <span>{curr.views}</span>
+              </h1>
             </div>
-          )
-        )}
-      </div>
+            <NavLink
+              to={`/blog/${curr._id}`}
+              className='text-blue-500 text-sm flex items-center'>
+              Read More <MdArrowRightAlt />
+            </NavLink>
+          </div>
+          <img
+            src={curr.coverImage.url}
+            alt={curr.title}
+            className='w-full md:w-[300px] h-[200px] object-cover rounded-lg'
+          />
+          <CiBookmark
+            onClick={() => handleClick(curr._id)}
+            className='text-blue-500 text-xl cursor-pointer'
+          />
+        </div>
+      ))}
     </div>
   );
 };

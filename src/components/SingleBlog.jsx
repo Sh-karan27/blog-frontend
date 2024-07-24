@@ -26,15 +26,21 @@ const SingleBlog = () => {
   console.log(data);
 
   return (
-    <div className='w-full flex items-center justify-center p-4 mt-10 h-screen'>
-      <div className='w-full flex items-left justify-center gap-5 h-3/4'>
+    <div className='w-full flex items-center justify-center p-4 mt-10 min-h-screen'>
+      <div className='w-full flex flex-col md:flex-row items-center md:items-start justify-center gap-5 md:h-3/4'>
         {data.data.coverImage && (
-          <img src={data.data.coverImage.url} alt='' className='w-1/4 ' />
+          <img
+            src={data.data.coverImage.url}
+            alt='Cover'
+            className='w-full md:w-1/4 object-cover'
+          />
         )}
-        <div className='p-4 flex flex-col items-left justify-left gap-5 w-1/2 overflow-y-scroll'>
-          <h1 className='text-5xl'>{data.data.title}</h1>
-          <h3 className='text-3xl text-gray-500'>{data.data.description}</h3>
-          <p>{data.data.content}</p>
+        <div className='p-4 flex flex-col items-start justify-start gap-5 w-full md:w-1/2 overflow-y-auto'>
+          <h1 className='text-3xl md:text-5xl'>{data.data.title}</h1>
+          <h3 className='text-xl md:text-3xl text-gray-500'>
+            {data.data.description}
+          </h3>
+          <p className='text-base md:text-lg'>{data.data.content}</p>
         </div>
       </div>
     </div>

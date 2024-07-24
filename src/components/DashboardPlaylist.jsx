@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserPlaylist } from '../store/slices/playlistSlice';
+import Loading from './Loading';
 
 const DashboardPlaylist = ({ id }) => {
   const dispatch = useDispatch();
@@ -21,9 +22,7 @@ const DashboardPlaylist = ({ id }) => {
   };
 
   if (loading) {
-    return (
-      <div className='flex justify-center items-center h-full'>Loading...</div>
-    );
+    return <Loading />;
   }
 
   if (error) {

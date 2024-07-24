@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../axiosInstance';
+import { data } from 'autoprefixer';
 
 const initialState = {
   loading: null,
@@ -64,6 +65,19 @@ export const getBlogById = createAsyncThunk(
   }
 );
 
+export const deleteBlogById = createAsyncThunk(
+  'delete/:blodId',
+  async ({ blogId }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.delete(`blog/${blogId}`);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const blogSlice = createSlice({
   name: 'blog',
   initialState,
@@ -117,6 +131,20 @@ const blogSlice = createSlice({
         state.loading = null;
         state.error = null;
         state.data = action.payload;
+      })
+      .addCase(deleteBlogById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteBlogById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteBlogById.fulfilled, (state, action) => {
+        state.loading = null;
+        const { blogId } = action.payload;
+        state.data = state.data.find((blog) => blog._id !== blogId);
+        state.error = null;
       });
   },
 });

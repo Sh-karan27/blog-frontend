@@ -82,6 +82,61 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+export const toggleBookmark = createAsyncThunk(
+  '/toggle/:blogId',
+  async ({ blogId }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`bookmark/toggle/${blogId}`);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(action.payload);
+    }
+  }
+);
+
+export const updateCoverImage = createAsyncThunk(
+  'users/updateCoverImage',
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(
+        'users/cover-image',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateProfileImage = createAsyncThunk(
+  'users/updateProfileImage',
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(
+        'users/profile-image',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -151,6 +206,45 @@ const authSlice = createSlice({
         state.loading = false;
         state.bookmarks = action.payload;
         state.error = null;
+      })
+      .addCase(toggleBookmark.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(toggleBookmark.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(toggleBookmark.fulfilled, (state, action) => {
+        state.loading = false;
+        state.bookmarks = action.payload;
+        state.error = null;
+      })
+      .addCase(updateCoverImage.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateCoverImage.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(updateCoverImage.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateProfileImage.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfileImage.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(updateProfileImage.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

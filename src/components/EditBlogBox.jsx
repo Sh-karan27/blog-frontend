@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ImCross } from 'react-icons/im';
 import { useDispatch } from 'react-redux';
 import { updateBlog } from '../store/slices/blogSlice';
-import { Navigate } from 'react-router-dom';
 const EditBlogBox = ({ blog, isOpen, onClose, onUpdate }) => {
   const [imagePreview, setImagePreview] = useState(blog.coverImage.url);
   const [formData, setFormData] = useState({
