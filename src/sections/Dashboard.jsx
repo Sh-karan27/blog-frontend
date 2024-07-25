@@ -13,19 +13,14 @@ import WatchHistory from '../components/WatchHistory';
 import Profile from '../components/Profile';
 import UserImage from '../components/UserImage';
 import Loading from '../components/Loading';
+import { CiEdit } from 'react-icons/ci';
+import UserDetails from '../components/UserDetails';
 
 const Dashboard = () => {
   const [selectComponent, setSelectComponent] = useState('Blogs');
   const [editCoverImage, setEditCoverImage] = useState(false);
   const [editUserProfileImage, setEditUserProfileImage] = useState(false);
-
-  const onCloseForCoverImage = () => {
-    setEditCoverImage(!editCoverImage);
-  };
-
-  const onCloseForProfile = () => {
-    setEditUserProfileImage(!editUserProfileImage);
-  };
+  const [userDetails, setUserDetails] = useState(false);
 
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector((state) => state.auth);
@@ -74,6 +69,10 @@ const Dashboard = () => {
 
   const handleuserProfileImageEdit = () => {
     setEditUserProfileImage(!editUserProfileImage);
+  };
+
+  const handleEditUserDetailsClick = () => {
+    setUserDetails(!userDetails);
   };
 
   const onUpdate = async () => {
@@ -150,6 +149,11 @@ const Dashboard = () => {
               </h1>
             </div>
           </div>
+          <button
+            className=' text-gray-500 hover:text-blue-500 text-4xl'
+            onClick={() => handleEditUserDetailsClick()}>
+            <CiEdit />
+          </button>
         </div>
       </div>
       <div className='w-full sm:w-3/4 border-b flex items-center justify-center sm:justify-start mt-10 px-4 sm:px-0 p-2'>
@@ -171,7 +175,7 @@ const Dashboard = () => {
       {editCoverImage && (
         <Profile
           isOpen={editCoverImage}
-          onClose={onCloseForCoverImage}
+          onClose={handleCoverImageEidtClick}
           onUpdate={onUpdate}
         />
       )}
@@ -179,6 +183,14 @@ const Dashboard = () => {
         <UserImage
           isOpen={editUserProfileImage}
           onClose={onCloseForProfile}
+          onUpdate={onUpdate}
+        />
+      )}
+      {userDetails && (
+        <UserDetails
+          onClose={handleEditUserDetailsClick}
+          user={user}
+          isOpen={userDetails}
           onUpdate={onUpdate}
         />
       )}

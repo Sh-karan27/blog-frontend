@@ -137,6 +137,28 @@ export const updateProfileImage = createAsyncThunk(
   }
 );
 
+export const updateAccountDetails = createAsyncThunk(
+  'user/updateDetails',
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(
+        'users/update-account',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log(formData);
+      console.log(response);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -245,6 +267,19 @@ const authSlice = createSlice({
       .addCase(updateProfileImage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(updateAccountDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateAccountDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateAccountDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = null;
       });
   },
 });

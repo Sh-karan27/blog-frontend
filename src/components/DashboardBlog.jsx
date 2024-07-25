@@ -13,7 +13,6 @@ import { MdArrowRightAlt } from 'react-icons/md';
 import { MdDeleteForever } from 'react-icons/md';
 import { CiEdit } from 'react-icons/ci';
 import EditBlogBox from './EditBlogBox';
-import loadingImg from '../assets/loading.gif';
 import { CiBookmark } from 'react-icons/ci';
 import { toggleBookmark } from '../store/slices/userSlice';
 import Loading from './Loading';
