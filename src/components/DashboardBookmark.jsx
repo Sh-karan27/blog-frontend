@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleBookmark, userBookmarks } from '../store/slices/userSlice';
 import { FaBookReader } from 'react-icons/fa';
@@ -11,32 +11,21 @@ const DashboardBookmark = ({ userId }) => {
   const dispatch = useDispatch();
   const { bookmarks, error, loading } = useSelector((state) => state.auth);
 
-const fetchUserBookmarks = useCallback(() => {
-    console.log('Fetching bookmarks for userId:', userId);
-    dispatch(userBookmarks({ userId }));
-  }, [dispatch, userId]);
-
   useEffect(() => {
-    fetchUserBookmarks();
-  }, [fetchUserBookmarks]);
+    dispatch(userBookmarks({ userId }));
+  }, []);
 
-   if (loading) {
-     return <Loading />;
-   }
+  if (loading) {
+    return <Loading />;
+  }
 
   if (error) {
-    return <div>error</div>;
+    return <div>Error</div>;
   }
+
   if (bookmarks.length === 0) {
     return <div>No bookmarks available</div>;
   }
-
-  const handleClick = (blogId) => {
-    dispatch(toggleBookmark({ blogId })).then(() => {
-      fetchUserBookmarks();
-    });
-  };
-  console.log(bookmarks);
 
   return (
     <div className='w-full max-w-screen-lg mx-auto p-4 flex flex-col items-center gap-10'>
@@ -77,7 +66,7 @@ const fetchUserBookmarks = useCallback(() => {
             className='w-full md:w-[300px] h-[200px] object-cover rounded-lg'
           />
           <CiBookmark
-            onClick={() => handleClick(curr._id)}
+            // onClick={() => handleClick(curr._id)}
             className='text-blue-500 text-xl cursor-pointer'
           />
         </div>

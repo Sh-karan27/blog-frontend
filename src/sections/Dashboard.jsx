@@ -48,19 +48,11 @@ const Dashboard = () => {
   const renderComponent = () => {
     switch (selectComponent) {
       case 'Blogs':
-        return user ? <DashboardBlog id={user._id} /> : <div>Loading...</div>;
+        return user ? <DashboardBlog id={user._id} /> : <Loading />;
       case 'Playlists':
-        return user ? (
-          <DashboardPlaylist id={user._id} />
-        ) : (
-          <div>Loading...</div>
-        );
+        return user ? <DashboardPlaylist id={user._id} /> : <Loading />;
       case 'Bookmark':
-        return user ? (
-          <DashboardBookmark userId={user._id} />
-        ) : (
-          <div>Loading...</div>
-        );
+        return user ? <DashboardBookmark userId={user._id} /> : <Loading />;
       case 'WatchHistory':
         return user ? <WatchHistory history={user._id} /> : <Loading />;
       default:
