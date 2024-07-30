@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../axiosInstance';
-import { data } from 'autoprefixer';
 
 const initialState = {
   loading: null,
@@ -78,6 +77,26 @@ export const deleteBlogById = createAsyncThunk(
   }
 );
 
+export const createBlog = createAsyncThunk(
+  'blog/createBlog',
+  async (formData, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('accessToken'); // replace with your token retrieval method
+      const response = await axiosInstance.post('/blog/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const blogSlice = createSlice({
   name: 'blog',
   initialState,
@@ -145,6 +164,19 @@ const blogSlice = createSlice({
         const { blogId } = action.payload;
         state.data = state.data.find((blog) => blog._id !== blogId);
         state.error = null;
+      })
+      .addCase(createBlog.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createBlog.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(createBlog.fulfilled, (state, action) => {
+        state.loading = null;
+        state.error = null;
+        state.data = action.payload;
       });
   },
 });

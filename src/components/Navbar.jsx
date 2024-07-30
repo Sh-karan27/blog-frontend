@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 import Hamburger from './Hamburger'; // Adjust the path as necessary
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../store/slices/userSlice';
+import { IoCreateOutline } from 'react-icons/io5';
+import CreateBlog from './CreateBlog';
 
 const navLinks = [
   {
@@ -30,7 +32,7 @@ const navLinks = [
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -39,6 +41,18 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+  };
+
+  const handleCreateBlog = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const onUpdate = () => {
+    
+  }
+
+  const onClose = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -62,7 +76,10 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
-          <div className='hidden md:flex items-center justify-end'>
+          <div className='hidden md:flex items-center justify-end gap-2'>
+            <button className='text-3xl' onClick={() => handleCreateBlog()}>
+              <IoCreateOutline />
+            </button>
             <button
               onClick={handleLogout}
               className='border border-black hover:bg-black hover:text-white rounded-3xl px-5 py-1 font-semibold'>
@@ -76,6 +93,7 @@ const Navbar = () => {
             />
           </div>
         </div>
+        {isOpen && <CreateBlog isOpne={isOpen} onClose={onClose} />}
       </nav>
       <div
         className={`md:hidden flex flex-col items-center justify-center w-full mt-5 bg-white shadow-lg p-5 absolute top-16 z-50 transition duration-300 ease-in-out delay-300 ${
