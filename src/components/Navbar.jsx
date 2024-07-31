@@ -83,7 +83,7 @@ const Navbar = () => {
             <button
               onClick={handleLogout}
               className='border border-black hover:bg-black hover:text-white rounded-3xl px-5 py-1 font-semibold'>
-              LogIn
+              LogOut
             </button>
           </div>
           <div className='md:hidden flex items-center justify-end absolute right-2 top-0'>

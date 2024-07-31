@@ -41,9 +41,9 @@ const DashboardBlog = ({ id }) => {
     }
   }, [id, dispatch]);
 
-   if (loading) {
-     return <Loading />;
-   }
+  if (loading) {
+    return <Loading />;
+  }
 
   if (error) {
     return <div>{error}</div>;
