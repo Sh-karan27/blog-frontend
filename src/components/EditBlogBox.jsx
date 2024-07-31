@@ -38,25 +38,31 @@ const EditBlogBox = ({ blog, isOpen, onClose, onUpdate }) => {
     onClose(); // Close the mod
   };
   return (
-    <div className='fixed inset-0 flex items-center justify-center bg-opacity-70'>
-      <div className='w-3/4 min-h-screen border bg-black bg-opacity-95 p-4 rounded-md'>
+    <div className='fixed inset-0 flex flex-col items-center justify-center bg-opacity-70'>
+      <div className='w-3/4 min-h-screen border bg-black bg-opacity-90 p-4 rounded-md'>
         <button
           className=' text-white hover:text-red-500 '
           onClick={() => onClose()}>
-          <ImCross />
+          Go Back
         </button>
-        <div className='p-4 flex flex-col items-center justify-center'>
-          <img src={imagePreview} alt='' className='w-[40%]' />
-          <div className='w-full items-center justify-left'>
-            <form action='submit' onSubmit={handleSubmit}>
-              <div className='mb-4'>
+        <div className='p-4 flex  items-center justify-center w-full h-full'>
+          <div className='w-[30%]'>
+            <img src={imagePreview} alt='' className='w-full  rounded-md' />
+          </div>
+
+          <div className='w-3/4 flex items-center justify-center h-full'>
+            <form
+              action='submit'
+              onSubmit={handleSubmit}
+              className='w-3/4 flex flex-col items-center justify-center gap-10 h-3/4'>
+              <div className='mb-4 flex flex-col items-left justify-left w-full'>
                 <label
                   className='block mb-2 text-sm font-bold text-blue-500'
                   htmlFor='title'>
-                  Title
+                  Blog Title
                 </label>
                 <input
-                  className='w-full  px-3 py-2 text-sm leading-tight bg-black  text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline'
+                  className='w-full  px-3 py-4 text-5xl leading-tight text-bold  bg-transparent  text-white   appearance-none focus:outline focus:shadow-outline'
                   id='title'
                   type='text'
                   name='title'
@@ -65,14 +71,14 @@ const EditBlogBox = ({ blog, isOpen, onClose, onUpdate }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className='mb-4'>
+              <div className='mb-4 flex flex-col items-left justify-left w-full'>
                 <label
                   className='block mb-2 text-sm font-bold text-blue-500'
                   htmlFor='description'>
-                  Description
+                  Blog Description
                 </label>
-                <input
-                  className='w-full px-3 py-2 text-sm leading-tight  bg-black  text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline'
+                <textarea
+                  className='w-full  h-[10rem]  px-3 py-4 text-xl leading-tight  font-semibold  bg-transparent  text-white   appearance-none focus:outline focus:shadow-outline'
                   id='description'
                   name='description'
                   placeholder='Blog description'
@@ -80,14 +86,14 @@ const EditBlogBox = ({ blog, isOpen, onClose, onUpdate }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className='mb-4'>
+              <div className='mb-4 flex flex-col items-left justify-left w-full'>
                 <label
                   className='block mb-2 text-sm font-bold text-blue-500'
                   htmlFor='content'>
-                  Content
+                  Blog Content
                 </label>
                 <textarea
-                  className='w-full px-3 py-2 text-sm leading-tight  bg-black  text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline'
+                  className='w-full  h-[15rem]  px-3 py-4 text-lg leading-tight font-light  bg-transparent  text-white   appearance-none focus:outline focus:shadow-outline'
                   id='content'
                   name='content'
                   placeholder='Blog content'
@@ -96,7 +102,7 @@ const EditBlogBox = ({ blog, isOpen, onClose, onUpdate }) => {
                   rows='10'
                 />
               </div>
-              <div className='mb-4'>
+              {/* <div className='mb-4'>
                 <label
                   className='block mb-2 text-sm font-bold text-blue-500'
                   htmlFor='coverImage'>
@@ -110,7 +116,7 @@ const EditBlogBox = ({ blog, isOpen, onClose, onUpdate }) => {
                   accept='image/*'
                   onChange={handleChange}
                 />
-              </div>
+              </div> */}
               <div className='mb-6 text-center'>
                 <button
                   className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline'

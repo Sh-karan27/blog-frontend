@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../axiosInstance';
+import { toast } from 'react-toastify';
 
 const initialState = {
   loading: null,
@@ -44,6 +45,14 @@ export const toggleBlogPublished = createAsyncThunk(
       const response = await axiosInstance.patch(
         `/blog/toggle/status/${blogId}`
       );
+      toast.success(
+        `${
+          response.data?.data.published === true
+            ? `'${response.data?.data.title}' status: published `
+            : `'${response.data?.data.title}' status: private `
+        }`
+      );
+      console.log(response.data);
       return { blogId, published: response.data.published };
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -117,12 +126,15 @@ const blogSlice = createSlice({
       })
       .addCase(toggleBlogPublished.fulfilled, (state, action) => {
         const { blogId, published } = action.payload;
+        console.log(published);
         const blog = state.data.find((blog) => blog._id === blogId);
         if (blog) {
           blog.published = published;
+          // console.log((blog.published = published));
         }
       })
       .addCase(toggleBlogPublished.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
       })
       .addCase(getBlogById.pending, (state) => {
@@ -145,11 +157,13 @@ const blogSlice = createSlice({
       .addCase(updateBlog.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error('Failed to update blog!');
       })
       .addCase(updateBlog.fulfilled, (state, action) => {
         state.loading = null;
         state.error = null;
         state.data = action.payload;
+        toast.success('Blog updated!');
       })
       .addCase(deleteBlogById.pending, (state) => {
         state.loading = true;
@@ -158,12 +172,14 @@ const blogSlice = createSlice({
       .addCase(deleteBlogById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error('Failed to delete blog');
       })
       .addCase(deleteBlogById.fulfilled, (state, action) => {
         state.loading = null;
         const { blogId } = action.payload;
         state.data = state.data.find((blog) => blog._id !== blogId);
         state.error = null;
+        toast.success('Blog deleted successfully!');
       })
       .addCase(createBlog.pending, (state) => {
         state.loading = true;
@@ -172,11 +188,13 @@ const blogSlice = createSlice({
       .addCase(createBlog.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error('Failed to publish blog!');
       })
       .addCase(createBlog.fulfilled, (state, action) => {
         state.loading = null;
         state.error = null;
         state.data = action.payload;
+        toast.success('Blog published successfully!');
       });
   },
 });

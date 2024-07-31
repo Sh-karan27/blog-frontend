@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../axiosInstance';
+import { toast } from 'react-toastify';
 
 const initialState = {
   user: null,
@@ -100,7 +101,7 @@ export const updateCoverImage = createAsyncThunk(
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.patch(
-        'users/cover-image',
+        '/users/cover-image',
         formData,
         {
           headers: {
@@ -108,6 +109,7 @@ export const updateCoverImage = createAsyncThunk(
           },
         }
       );
+
       console.log(response.data);
       return response.data;
     } catch (error) {
@@ -250,10 +252,12 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.error = null;
+        toast.success('Blog Update Cover Image!');
       })
       .addCase(updateCoverImage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error('Failed to Update Cover Image!');
       })
       .addCase(updateProfileImage.pending, (state) => {
         state.loading = true;
