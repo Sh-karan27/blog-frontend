@@ -93,7 +93,7 @@ const Navbar = () => {
             />
           </div>
         </div>
-        {isOpen && <CreateBlog isOpne={isOpen} onClose={onClose} />}
+        {isOpen && <CreateBlog isOpen={isOpen} onClose={onClose} />}
       </nav>
       <div
         className={`md:hidden flex flex-col items-center justify-center w-full mt-5 bg-white shadow-lg p-5 absolute top-16 z-50 transition duration-300 ease-in-out delay-300 ${
