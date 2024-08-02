@@ -6,23 +6,16 @@ import { formatDate } from '../helper';
 import { TfiComment } from 'react-icons/tfi';
 import { SlLike } from 'react-icons/sl';
 import { CiShare1 } from 'react-icons/ci';
-import { getBlogComments } from '../store/slices/commentSlice';
+import Comments from './Comments';
 
 const SingleBlog = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const maxContentLength = 50; // Adjust the number of characters to show initially
-
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
   const dispatch = useDispatch();
   const { loading, error, data } = useSelector((state) => state.blog);
-  const { comment } = useSelector((state) => state.comment);
+
   const { blogId } = useParams();
 
   useEffect(() => {
     dispatch(getBlogById({ blogId }));
-    dispatch(getBlogComments({ blogId }));
   }, [blogId, dispatch]);
 
   if (loading) {
@@ -36,8 +29,8 @@ const SingleBlog = () => {
   if (!data || !data.data) {
     return <div>No data available</div>;
   }
+
   console.log(data);
-  console.log(comment);
 
   return (
     <div className='w-full flex flex-col items-center justify-center p-4 mt-10 min-h-screen'>
@@ -94,35 +87,7 @@ const SingleBlog = () => {
           <p className='text-md md:text-md'>{data.data.content}</p>
         </div>
       </div>
-      <div className='h-screen w-3/4  flex flex-col items-start justify-start p-4  gap-5'>
-        <h1 className='text-3xl text-[#366AC4] font-semibold'>Comments</h1>
-        <div className='h-full flex flex-col items-center justify-start w-full gap-5  overflow-y-scroll'>
-          {comment.map((curr, i) => {
-            return (
-              <div
-                key={i}
-                className='w-full flex-col items-center justify-center gap-5 border p-4 rounded-md'>
-                <div className='flex items-center justify-left w-full gap-2'>
-                  <img
-                    src={curr.user.profileImage.url}
-                    alt=''
-                    className='w-10 h-10 rounded-full'
-                  />
-                  <p className='font-bold'>{curr.user.username}</p>
-                  <p className='text-gray-400'>{formatDate(curr.createdAt)}</p>
-                </div>
-                <div className='w-full flex flex-col items-start justify-center gap-2'>
-                  <p className='w-full'>{curr.content}</p>
-
-                  <button>
-                    <SlLike />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <Comments blogId={blogId} />
     </div>
   );
 };
