@@ -12,7 +12,7 @@ export const getBlogComments = createAsyncThunk(
   async ({ blogId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/comments/${blogId}`);
-      return response.data;
+      return response.data.data;
     } catch (error) {
       rejectWithValue(error.response.data);
     }

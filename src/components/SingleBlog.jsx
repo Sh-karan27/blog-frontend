@@ -85,9 +85,32 @@ const SingleBlog = () => {
           <p className="text-md md:text-md">{data.data.content}</p>
         </div>
       </div>
-      <div className="h-screen w-1/3 border flex flex-col items-center justify-between p-4 overflow-y-scroll">
+      <div className="h-screen w-1/3 border flex flex-col items-start justify-start p-4 overflow-y-scroll">
         <h1 className="text-3xl text-[#366AC4] font-semibold">Comments</h1>
-        <div></div>
+        <div className="flex flex-col items-center justify-center w-full">
+          {comment.map((curr, i) => {
+            return (
+              <div
+                key={i}
+                className="w-full flex-col items-left justify-left gap-2 border p-4"
+              >
+                <div className="flex items-center justify-cente w-full gap-2">
+                  <img
+                    src={curr.user.profileImage.url}
+                    alt=""
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <p className="font-bold">{curr.user.username}</p>
+                  <p className="text-gray-400">{formatDate(curr.createdAt)}</p>
+                </div>
+                <div className="w-3/4">
+                  <p>{curr.content}</p>
+                </div>
+                <SlLike />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
