@@ -1,14 +1,20 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { getBlogById } from "../store/slices/blogSlice";
-import { formatDate } from "../helper";
-import { TfiComment } from "react-icons/tfi";
-import { SlLike } from "react-icons/sl";
-import { CiShare1 } from "react-icons/ci";
-import { getBlogComments } from "../store/slices/commentSlice";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { getBlogById } from '../store/slices/blogSlice';
+import { formatDate } from '../helper';
+import { TfiComment } from 'react-icons/tfi';
+import { SlLike } from 'react-icons/sl';
+import { CiShare1 } from 'react-icons/ci';
+import { getBlogComments } from '../store/slices/commentSlice';
 
 const SingleBlog = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const maxContentLength = 50; // Adjust the number of characters to show initially
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
   const dispatch = useDispatch();
   const { loading, error, data } = useSelector((state) => state.blog);
   const { comment } = useSelector((state) => state.comment);
@@ -34,26 +40,28 @@ const SingleBlog = () => {
   console.log(comment);
 
   return (
-    <div className="w-full flex items-center justify-center p-4 mt-10 min-h-screen">
-      <div className="w-full flex flex-col  items-center r justify-center gap-5 ">
-        <div className="p-4 flex flex-col items-center justify-center gap-5 w-full md:w-1/2 overflow-y-auto">
-          <h1 className="text-3xl font-bold md:text-5xl">{data.data.title}</h1>
-          <div className="  flex items-center justify-center gap-2">
-            <div className=" text-xl flex items-center justify-center gap-2">
-              <span className="text-gray-400">
-                {formatDate(data.data.createdAt)} By -{" "}
+    <div className='w-full flex flex-col items-center justify-center p-4 mt-10 min-h-screen'>
+      <div className=' flex flex-col  items-center justify-center gap-5 '>
+        <div className='p-4 flex flex-col items-center justify-center gap-5 w-full md:w-1/2 overflow-y-auto'>
+          <h1 className='text-3xl font-bold md:text-5xl'>{data.data.title}</h1>
+          <div className='flex items-center justify-center gap-2'>
+            <div className='text-xl flex items-center justify-center gap-2'>
+              <span className='text-gray-400'>
+                {formatDate(data.data.createdAt)} By -{' '}
               </span>
-              <div className="flex items-center justify-center gap-2 ">
+              <div className='flex items-center justify-center gap-2 '>
                 <img
                   src={data.data.author?.profileImage.url}
-                  alt=""
-                  className=" w-10 h-10 rounded-full"
+                  alt=''
+                  className='w-10 h-10 rounded-full'
                 />
-                <span className="font-semibold">
+                <span className='font-semibold'>
                   {data.data.author?.username}
                 </span>
-                <button className="bg-[#366AC4] text-sm px-2 py-1 rounded-md text-white">
-                  Follow
+                <button className='bg-[#366AC4] text-sm px-2 py-1 rounded-md text-white'>
+                  {data.data.author.isFollowing === true
+                    ? 'Following'
+                    : 'Follow'}
                 </button>
               </div>
             </div>
@@ -62,51 +70,54 @@ const SingleBlog = () => {
         {data.data.coverImage && (
           <img
             src={data.data.coverImage.url}
-            alt="Cover"
-            className="w-1/2 object-cover"
+            alt='Cover'
+            className='w-1/2 object-cover'
           />
         )}
 
-        <div className="flex items-left justify-left gap-5 w-1/2 text-2xl p-4">
-          <h1 className="text-gray-400">
+        <div className='flex items-left justify-left gap-5 w-1/2 text-2xl p-4'>
+          <button className='text-gray-400'>
             <SlLike />
-          </h1>
-          <h1 className="text-gray-400">
+          </button>
+          <button className='text-gray-400 flex items-center justify-center gap-2'>
             <TfiComment />
-          </h1>
-          <h1 className="text-gray-400">
+            <span className='text-sm'>{data.data.comments.length}</span>
+          </button>
+          <button className='text-gray-400'>
             <CiShare1 />
-          </h1>
+          </button>
         </div>
-        <div className="p-4 flex shadow-xl  flex-col items-center justify-center gap-5 w-1/2 ">
-          <h3 className="text-xl md:text-xl text-gray-500">
+        <div className='p-4 flex shadow-xl  flex-col items-center justify-center gap-5 w-1/2 '>
+          <h3 className='text-xl md:text-xl text-gray-500'>
             {data.data.description}
           </h3>
-          <p className="text-md md:text-md">{data.data.content}</p>
+          <p className='text-md md:text-md'>{data.data.content}</p>
         </div>
       </div>
-      <div className="h-screen w-1/3 border flex flex-col items-start justify-start p-4 overflow-y-scroll">
-        <h1 className="text-3xl text-[#366AC4] font-semibold">Comments</h1>
-        <div className="flex flex-col items-center justify-center w-full">
+      <div className='h-screen w-3/4  flex flex-col items-start justify-start p-4  gap-5'>
+        <h1 className='text-3xl text-[#366AC4] font-semibold'>Comments</h1>
+        <div className='h-full flex flex-col items-center justify-start w-full gap-5  overflow-y-scroll'>
           {comment.map((curr, i) => {
             return (
               <div
                 key={i}
-                className="w-full flex-col items-left justify-left gap-2 border p-4"
-              >
-                <div className="flex items-center justify-cente w-full gap-2">
+                className='w-full flex-col items-center justify-center gap-5 border p-4 rounded-md'>
+                <div className='flex items-center justify-left w-full gap-2'>
                   <img
                     src={curr.user.profileImage.url}
-                    alt=""
-                    className="w-10 h-10 rounded-full"
+                    alt=''
+                    className='w-10 h-10 rounded-full'
                   />
-                  <p className="font-bold">{curr.user.username}</p>
-                  <p className="text-gray-400">{formatDate(curr.createdAt)}</p>
+                  <p className='font-bold'>{curr.user.username}</p>
+                  <p className='text-gray-400'>{formatDate(curr.createdAt)}</p>
                 </div>
-                <div className="w-3/4">
-                  <p>{curr.content}</p>
+                <div className='w-full flex flex-col items-start justify-center gap-2'>
+                  <p className='w-full'>{curr.content}</p>
+
+                  <button>
+                    <SlLike />
+                  </button>
                 </div>
-                <SlLike />
               </div>
             );
           })}
