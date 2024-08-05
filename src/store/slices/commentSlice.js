@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../../axiosInstance';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axiosInstance from "../../axiosInstance";
 
 const initialState = {
   loading: null,
@@ -8,7 +8,7 @@ const initialState = {
 };
 
 export const getBlogComments = createAsyncThunk(
-  '/blog/comments',
+  "/blog/comments",
   async ({ blogId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/comments/${blogId}`);
@@ -20,7 +20,7 @@ export const getBlogComments = createAsyncThunk(
 );
 
 export const deleteCommentById = createAsyncThunk(
-  '/comment/delete',
+  "/comment/delete",
   async ({ commentId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.delete(`comments/c/${commentId}`);
@@ -32,17 +32,16 @@ export const deleteCommentById = createAsyncThunk(
 );
 
 export const addComment = createAsyncThunk(
-  '/comment/add',
+  "/comment/add",
   async ({ formData, blogId }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('accessToken');
+      console.log(formData);
+      const token = localStorage.getItem("accessToken");
       const response = await axiosInstance.post(
-        `/comments/${blogId}`,
-        formData, // formData is a FormData object now
-        {
+        `/comments/${blogId}`,formData,{
           headers: {
-            'Content-Type': 'multipart/form-data', // Ensures the server interprets this correctly
-            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data", // Ensures the server interprets this correctly
+            // Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -55,7 +54,7 @@ export const addComment = createAsyncThunk(
 );
 
 const commentSlice = createSlice({
-  name: 'comment',
+  name: "comment",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

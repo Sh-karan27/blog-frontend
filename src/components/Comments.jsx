@@ -51,11 +51,8 @@ const Comments = ({ blogId }) => {
     e.preventDefault();
     console.log(formData);
 
-    // Use FormData to send the data
-    const dataToSend = new FormData();
-    dataToSend.append('content', formData.content);
-
-    dispatch(addComment({ formData: dataToSend, blogId }));
+    
+    dispatch(addComment({ formData, blogId }));
   };
 
   console.log(comment);
