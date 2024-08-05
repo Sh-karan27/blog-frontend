@@ -31,6 +31,29 @@ export const deleteCommentById = createAsyncThunk(
   }
 );
 
+export const addComment = createAsyncThunk(
+  '/comment/add',
+  async ({ formData, blogId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await axiosInstance.post(
+        `/comments/${blogId}`,
+        formData, // formData is a FormData object now
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Ensures the server interprets this correctly
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const commentSlice = createSlice({
   name: 'comment',
   initialState,
@@ -61,6 +84,19 @@ const commentSlice = createSlice({
       .addCase(deleteCommentById.fulfilled, (state, action) => {
         state.loading = false;
 
+        state.comment = action.payload;
+        state.error = null;
+      })
+      .addCase(addComment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addComment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(addComment.fulfilled, (state, action) => {
+        state.loading = false;
         state.comment = action.payload;
         state.error = null;
       });

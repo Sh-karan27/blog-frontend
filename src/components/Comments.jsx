@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  addComment,
   deleteCommentById,
   getBlogComments,
 } from '../store/slices/commentSlice';
@@ -10,6 +11,10 @@ import { SlLike } from 'react-icons/sl';
 import Loading from './Loading';
 
 const Comments = ({ blogId }) => {
+  const [formData, setFormData] = useState({
+    content: '',
+  });
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -21,8 +26,10 @@ const Comments = ({ blogId }) => {
   if (loading) {
     return <Loading />;
   }
+
   if (error) {
-    return { error };
+    // Display error as a string or in JSX
+    return <div>Error: {error.message || 'An error occurred'}</div>;
   }
 
   if (!Array.isArray(comment) || comment.length === 0) {
@@ -34,10 +41,41 @@ const Comments = ({ blogId }) => {
     dispatch(getBlogComments({ blogId }));
   };
 
+  const handleOnChange = (e) => {
+    setFormData({
+      content: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+    // Use FormData to send the data
+    const dataToSend = new FormData();
+    dataToSend.append('content', formData.content);
+
+    dispatch(addComment({ formData: dataToSend, blogId }));
+  };
+
   console.log(comment);
   return (
     <div className='h-screen w-3/4  flex flex-col items-start justify-start p-4  gap-5'>
       <h1 className='text-3xl text-[#366AC4] font-semibold'>Comments</h1>
+      <div className='w-full flex items-center justify-between'>
+        <input
+          type='text'
+          placeholder='Add comment'
+          onChange={handleOnChange}
+          className='border w-3/4 rounded-lg border-r-0 rounded-r-none p-4'
+          value={formData.content}
+        />
+        <button
+          onClick={handleSubmit}
+          className='p-4 rounded-lg w-1/4 rounded-l-none border-l-0 bg-blue-500 text-white'>
+          Add
+        </button>
+      </div>
       <div className='h-full flex flex-col items-center justify-start w-full gap-5  overflow-y-scroll'>
         {comment.map((curr, i) => {
           return (
