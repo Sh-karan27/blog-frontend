@@ -31,6 +31,29 @@ export const deleteCommentById = createAsyncThunk(
   }
 );
 
+export const editCommentById = createAsyncThunk(
+  '/comment/update',
+  async ({ editContent, editCommentId }, { rejectWithValue }) => {
+    try {
+      console.log(editContent);
+      console.log(editCommentId);
+      const token = localStorage.getItem('accessToken');
+      const response = await axiosInstance.patch(
+        `/comments/c/${editCommentId}`,
+        editContent,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 export const addComment = createAsyncThunk(
   '/comment/add',
   async ({ formData, blogId }, { rejectWithValue }) => {
@@ -97,6 +120,19 @@ const commentSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(addComment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.comment = action.payload;
+        state.error = null;
+      })
+      .addCase(editCommentById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(editCommentById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(editCommentById.fulfilled, (state, action) => {
         state.loading = false;
         state.comment = action.payload;
         state.error = null;

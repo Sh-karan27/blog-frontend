@@ -30,7 +30,7 @@ const SingleBlog = () => {
     return <div>No data available</div>;
   }
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <div className='w-full flex flex-col items-center justify-center p-4 mt-10 min-h-screen'>

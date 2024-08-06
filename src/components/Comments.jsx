@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   addComment,
   deleteCommentById,
+  editCommentById,
   getBlogComments,
 } from '../store/slices/commentSlice';
 import { MdDelete } from 'react-icons/md';
@@ -9,9 +10,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { formatDate } from '../helper';
 import { SlLike } from 'react-icons/sl';
 import Loading from './Loading';
+import { CiEdit } from 'react-icons/ci';
 
 const Comments = ({ blogId }) => {
   const [formData, setFormData] = useState({
+    content: '',
+  });
+
+  const [editCommentId, setEditCommentId] = useState(null);
+  const [editContent, setEditContent] = useState({
     content: '',
   });
 
@@ -56,6 +63,39 @@ const Comments = ({ blogId }) => {
     });
   };
 
+  const handleEditClick = (commentId, content) => {
+    console.log(commentId);
+    console.log(content);
+
+    setEditCommentId(commentId);
+    setEditContent({
+      ...editContent,
+      content: content,
+    });
+  };
+
+  const handleEditChange = (e) => {
+    setEditContent({
+      ...editContent,
+      content: e.target.value,
+    });
+  };
+
+  const handleSaveEdit = async (e) => {
+    e.preventDefault();
+    console.log(editCommentId);
+    console.log(editContent);
+    dispatch(editCommentById({ editContent, editCommentId }));
+    await dispatch(getBlogComments({ blogId }));
+    setEditCommentId(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditCommentId(null);
+    setEditContent('');
+  };
+  console.log(comment);
+
   return (
     <div className='flex flex-col items-start justify-start w-full p-4 gap-5 lg:w-3/4'>
       <h1 className='text-3xl text-[#366AC4] font-semibold'>Comments</h1>
@@ -77,42 +117,64 @@ const Comments = ({ blogId }) => {
         <div className='text-gray-600'>No comments yet</div>
       ) : (
         <div className='flex flex-col items-center justify-start w-full gap-5 overflow-y-auto max-h-[500px]'>
-          {comment.map((curr, i) => {
-            return (
-              <div
-                key={i}
-                className='w-full flex flex-col items-start justify-center gap-3 border p-4 rounded-md shadow-md bg-white'>
-                <div className='flex items-center justify-start w-full gap-3'>
-                  <img
-                    src={curr.user.profileImage.url}
-                    alt={`${curr.user.username}'s profile`}
-                    className='w-10 h-10 rounded-full object-cover'
-                  />
-                  <div>
-                    <p className='font-bold'>{curr.user.username}</p>
-                    <p className='text-gray-400 text-sm'>
-                      {formatDate(curr.createdAt)}
-                    </p>
-                  </div>
-                </div>
-                <div className='w-full flex flex-col items-start justify-center gap-2'>
-                  <p className='w-full text-gray-800'>{curr.content}</p>
-
-                  <div className='flex items-center justify-start gap-2'>
-                    <button className='text-gray-500 hover:text-blue-500 transition-colors'>
-                      <SlLike />
-                    </button>
-
-                    <button
-                      onClick={() => handleDeleteComment(curr._id)}
-                      className='text-gray-500 hover:text-red-500 text-xl transition-colors'>
-                      <MdDelete />
-                    </button>
-                  </div>
+          {comment.map((curr) => (
+            <div
+              key={curr._id}
+              className='w-full flex flex-col items-start justify-center gap-3 border p-4 rounded-md shadow-md bg-white'>
+              <div className='flex items-center justify-start w-full gap-3'>
+                <img
+                  src={curr.user.profileImage.url}
+                  alt={`${curr.user.username}'s profile`}
+                  className='w-10 h-10 rounded-full object-cover'
+                />
+                <div>
+                  <p className='font-bold'>{curr.user.username}</p>
+                  <p className='text-gray-400 text-sm'>
+                    {formatDate(curr.createdAt)}
+                  </p>
                 </div>
               </div>
-            );
-          })}
+              <div className='w-full flex flex-col items-start justify-center gap-2'>
+                {editCommentId === curr._id ? (
+                  <div className='flex items-center justify-center w-full'>
+                    <input
+                      type='text'
+                      className='w-full border-b outline-none'
+                      value={editContent.content}
+                      onChange={handleEditChange}
+                    />
+                    <div className='flex items-center justify-center gap-2'>
+                      <button className='p-2' onClick={handleSaveEdit}>
+                        Save
+                      </button>
+                      <button className='p-2' onClick={handleCancelEdit}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className='w-full text-gray-800'>{curr.content}</p>
+                )}
+
+                <div className='flex items-center justify-start gap-2'>
+                  <button className='text-gray-500 hover:text-blue-500 transition-colors'>
+                    <SlLike />
+                  </button>
+
+                  <button
+                    onClick={() => handleDeleteComment(curr._id)}
+                    className='text-gray-500 hover:text-red-500 text-xl transition-colors'>
+                    <MdDelete />
+                  </button>
+                  <button
+                    className='text-gray-500'
+                    onClick={() => handleEditClick(curr._id, curr.content)}>
+                    <CiEdit />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
