@@ -12,6 +12,7 @@ import Loading from './Loading';
 import { CiEdit } from 'react-icons/ci';
 import { BiSolidLike } from 'react-icons/bi';
 import { current } from '@reduxjs/toolkit';
+import { toggleCommentLike } from '../store/slices/likeSlice';
 const Comments = ({ blogId }) => {
   const [formData, setFormData] = useState({
     content: '',
@@ -94,6 +95,15 @@ const Comments = ({ blogId }) => {
     setEditCommentId(null);
     setEditContent('');
   };
+
+  const handleToggleCommentLike =  (commentId) => {
+    console.log(commentId);
+    dispatch(toggleCommentLike({ commentId: commentId })).then(() => {
+      
+      dispatch(getBlogComments({ blogId }));
+    })
+  };
+
   console.log(comment);
 
   return (
@@ -158,9 +168,10 @@ const Comments = ({ blogId }) => {
 
                 <div className='flex items-center justify-start gap-2'>
                   <button
+                    onClick={() => handleToggleCommentLike(curr._id)}
                     className={`${
                       curr.isLiked ? 'text-blue-500' : 'text-gray-500'
-                    } hover:text-blue-500 transition-colors flex items-center justify-center`}>
+                    }  transition-colors flex items-center justify-center`}>
                     <BiSolidLike />
                     {curr.likeCount > 0 && <span>{curr.likeCount}</span>}
                   </button>
