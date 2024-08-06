@@ -4,9 +4,10 @@ import { useParams } from 'react-router-dom';
 import { getBlogById } from '../store/slices/blogSlice';
 import { formatDate } from '../helper';
 import { TfiComment } from 'react-icons/tfi';
-import { SlLike } from 'react-icons/sl';
 import { CiShare1 } from 'react-icons/ci';
 import Comments from './Comments';
+
+import { BiSolidLike } from 'react-icons/bi';
 
 const SingleBlog = () => {
   const dispatch = useDispatch();
@@ -70,7 +71,7 @@ const SingleBlog = () => {
 
         <div className='flex items-left justify-left gap-5 w-1/2 text-2xl p-4'>
           <button className='text-gray-400'>
-            <SlLike />
+            <BiSolidLike />
           </button>
           <button className='text-gray-400 flex items-center justify-center gap-2'>
             <TfiComment />

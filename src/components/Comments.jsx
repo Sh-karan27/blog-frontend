@@ -8,10 +8,10 @@ import {
 import { MdDelete } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatDate } from '../helper';
-import { SlLike } from 'react-icons/sl';
 import Loading from './Loading';
 import { CiEdit } from 'react-icons/ci';
-
+import { BiSolidLike } from 'react-icons/bi';
+import { current } from '@reduxjs/toolkit';
 const Comments = ({ blogId }) => {
   const [formData, setFormData] = useState({
     content: '',
@@ -157,8 +157,12 @@ const Comments = ({ blogId }) => {
                 )}
 
                 <div className='flex items-center justify-start gap-2'>
-                  <button className='text-gray-500 hover:text-blue-500 transition-colors'>
-                    <SlLike />
+                  <button
+                    className={`${
+                      curr.isLiked ? 'text-blue-500' : 'text-gray-500'
+                    } hover:text-blue-500 transition-colors flex items-center justify-center`}>
+                    <BiSolidLike />
+                    {curr.likeCount > 0 && <span>{curr.likeCount}</span>}
                   </button>
 
                   <button
