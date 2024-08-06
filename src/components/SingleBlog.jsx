@@ -8,6 +8,7 @@ import { CiShare1 } from 'react-icons/ci';
 import Comments from './Comments';
 
 import { BiSolidLike } from 'react-icons/bi';
+import { toggleBlogLike } from '../store/slices/likeSlice';
 
 const SingleBlog = () => {
   const dispatch = useDispatch();
@@ -31,7 +32,16 @@ const SingleBlog = () => {
     return <div>No data available</div>;
   }
 
-  // console.log(data);
+  const handleLike = (currBlogId) => {
+    dispatch(toggleBlogLike({ blogId: currBlogId })).then(() => {
+      dispatch(getBlogById({ blogId }));
+
+      console.log(currBlogId);
+      console.log(blogId);
+    });
+  };
+
+  console.log(data);
 
   return (
     <div className='w-full flex flex-col items-center justify-center p-4 mt-10 min-h-screen'>
@@ -70,8 +80,13 @@ const SingleBlog = () => {
         )}
 
         <div className='flex items-left justify-left gap-5 w-1/2 text-2xl p-4'>
-          <button className='text-gray-400'>
+          <button
+            className={`${
+              data.data.isLiked ? 'text-blue-500' : 'text-gray-500'
+            } flex items-center justify-center`}
+            onClick={() => handleLike(data.data._id)}>
             <BiSolidLike />
+            {data.data.likeCount > 0 && <span className='text-sm'>{data.data.likeCount}</span>}
           </button>
           <button className='text-gray-400 flex items-center justify-center gap-2'>
             <TfiComment />
