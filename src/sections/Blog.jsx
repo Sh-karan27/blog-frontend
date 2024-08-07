@@ -1,51 +1,167 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { searchBlogs } from '../store/slices/blogSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import Loading from '../components/Loading';
+import { NavLink } from 'react-router-dom';
+import { MdArrowRightAlt } from 'react-icons/md';
+import { FaBookReader } from 'react-icons/fa';
+import { formatDate } from '../helper';
 
 const Blog = () => {
-  const [searchText, setSearchText] = useState('');
-  const [category, setCategory] = useState('');
-  const [sortType, setSortType] = useState('');
+  // State to manage search query and filters
+  const [searchQuery, setSearchQuery] = useState({
+    query: 'batman',
+    sortBy: 'views',
+    sortType: 'dsc',
+    limit: 10,
+    page: 1,
+  });
 
-  const handleSearch = () => {
-    // Handle the search logic here
-    console.log('Search Text:', searchText);
-    console.log('Category:', category);
-    console.log('Sort Type:', sortType);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(searchBlogs(searchQuery));
+  }, [dispatch, searchQuery]);
+  const { loading, error, data } = useSelector((state) => state.blog);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return { error };
+  }
+
+  // Handle change for inputs and selects
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSearchQuery((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
+  // Dummy search function to simulate search operation
+  const handleSearch = (e) => {
+    e.preventDefault();
+    dispatch(searchBlogs(searchQuery));
+  };
+
+  if (Array.isArray(data) && data.length === 0) {
+    return console.log('Blog not found');
+  }
+
+  console.log(data);
+
   return (
-    <div className='h-screen w-full flex items-center justify-center p-4'>
-      <div className='flex flex-col sm:flex-row gap-4 items-center p-4 border border-gray-300 rounded-md shadow-md bg-white w-full max-w-2xl'>
+    <div className='h-full w-full flex flex-col items-center justify-center p-4'>
+      <div className='flex flex-col sm:flex-row gap-4 items-center justify-center p-4    '>
         <input
           type='text'
+          name='query'
           placeholder='Search...'
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          className='w-full sm:w-auto p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500'
+          value={searchQuery.query}
+          onChange={handleInputChange}
+          className='w-full sm:w-auto p-2 border-b border-gray-300 outline-none focus:border-blue-500 '
         />
         <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className='w-full sm:w-auto p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500'>
-          <option value=''>Select Category</option>
-          <option value='technology'>Technology</option>
-          <option value='health'>Health</option>
-          <option value='finance'>Finance</option>
-          <option value='education'>Education</option>
+          name='sortBy'
+          value={searchQuery.sortBy}
+          onChange={handleInputChange}
+          className='w-full sm:w-auto p-2 border-b border-gray-300 outline-none focus:border-blue-500 '>
+          <option value='views'>Views</option>
+          <option value='date'>createdAt</option>
+          <option value='popularity'>commentCount</option>
+          <option value='relevance'>likeCount</option>
         </select>
         <select
-          value={sortType}
-          onChange={(e) => setSortType(e.target.value)}
-          className='w-full sm:w-auto p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500'>
-          <option value=''>Sort By</option>
-          <option value='date'>Date</option>
-          <option value='popularity'>Popularity</option>
-          <option value='relevance'>Relevance</option>
+          name='sortType'
+          value={searchQuery.sortType}
+          onChange={handleInputChange}
+          className='w-full sm:w-auto p-2 border-b border-gray-300 outline-none focus:border-blue-500 '>
+          <option value='asc'>Ascending</option>
+          <option value='desc'>Descending</option>
         </select>
+        <input
+          type='number'
+          name='limit'
+          placeholder='Limit'
+          value={searchQuery.limit}
+          onChange={handleInputChange}
+          className='w-full sm:w-auto p-2 border-b border-gray-300 outline-none focus:border-blue-500'
+        />
+        <input
+          type='number'
+          name='page'
+          placeholder='Page'
+          value={searchQuery.page}
+          onChange={handleInputChange}
+          className='w-full sm:w-auto p-2 border-b border-gray-300 outline-none focus:border-blue-500'
+        />
         <button
           onClick={handleSearch}
-          className='w-full sm:w-auto p-2 bg-white text-black border border-black rounded-md hover:bg-black hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-500'>
+          className='px-4 py-2 bg-blue-500 text-white rounded-md'>
           Search
         </button>
+      </div>
+
+      <div className='w-3/4 h-full flex flex-col items-center justify-center'>
+        {data ? (
+          data.map((curr, i) => (
+            <div
+              key={i}
+              className='flex flex-col md:flex-row items-center md:items-start justify-between w-full border-b p-4 gap-4'>
+              <div className='flex flex-col items-start justify-start p-4 w-full md:w-1/2 gap-2'>
+                <h1 className='font-bold text-lg mb-2'>{curr.title}</h1>
+                <p className='text-sm text-gray-600 mb-4 line-clamp-3'>
+                  {curr.description}
+                </p>
+                <div className='flex items-center justify-between w-full'>
+                  <h1 className='text-sm text-gray-500 flex items-center gap-1'>
+                    <FaBookReader className='text-blue-500' />
+                    <span>{curr.views}</span>
+                  </h1>
+                  {/* <div className='flex items-center gap-4'>
+                  <button onClick={() => handleEditClick(curr)}>
+                    <CiEdit className='text-gray-500 text-xl' />
+                  </button>
+                  <button onClick={() => handleToggleBlogStatus(curr._id)}>
+                    {curr.published ? (
+                      <BsEyeFill className='text-blue-500 text-xl' />
+                    ) : (
+                      <RiEyeOffFill className='text-red-500 text-xl' />
+                    )}
+                  </button>
+                  <button onClick={() => handleDelete(curr._id)}>
+                    <MdDeleteForever className='text-gray-500 text-xl hover:text-red-500' />
+                  </button>
+                </div> */}
+                </div>
+                <NavLink
+                  to={`/blog/${curr._id}`}
+                  className='text-blue-500 text-sm flex items-center'>
+                  Read More <MdArrowRightAlt />
+                </NavLink>
+                <p className='text-gray-500  text-sm font-semibold flex items-center'>
+                  {formatDate(curr.createdAt)}
+                </p>
+              </div>
+              <img
+                src={curr.coverImage.url}
+                alt={curr.title}
+                className='w-full md:w-[300px] h-[200px] object-cover rounded-lg'
+              />
+              {/* <CiBookmark
+                className={` text-xl cursor-pointer ${
+                  bookmark ? 'text-blue-500' : 'text-gray-500'
+                } `}
+                onClick={() => handleBookmarkClick(curr._id)}
+              /> */}
+            </div>
+          ))
+        ) : (
+          <div>No blogs yet</div>
+        )}
       </div>
     </div>
   );

@@ -76,7 +76,7 @@ const DashboardBlog = ({ id }) => {
 
   return (
     <div className='w-full max-w-screen-lg mx-auto p-4 flex flex-col items-center gap-10'>
-      <div></div>
+      
       {data.map((curr, i) => (
         <div
           key={i}

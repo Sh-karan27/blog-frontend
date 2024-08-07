@@ -106,6 +106,22 @@ export const createBlog = createAsyncThunk(
   }
 );
 
+export const searchBlogs = createAsyncThunk(
+  'blog/searchBlog',
+  async ({ query, sortBy, sortType, limit, page }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/blog/", {
+        params: { query, sortBy, sortType, limit, page },
+      });
+      console.log(response.data);
+
+      return response.data.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const blogSlice = createSlice({
   name: 'blog',
   initialState,
@@ -195,6 +211,19 @@ const blogSlice = createSlice({
         state.error = null;
         state.data = action.payload;
         toast.success('Blog published successfully!');
+      })
+      .addCase(searchBlogs.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchBlogs.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(searchBlogs.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
       });
   },
 });
