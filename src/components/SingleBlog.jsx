@@ -15,11 +15,13 @@ import Loading from "./Loading";
 const SingleBlog = () => {
   const dispatch = useDispatch();
   const { loading, error, data } = useSelector((state) => state.blog);
-
+  const { user } = useSelector((state) => state.auth);
+  console.log(user)
   const { blogId } = useParams();
 
   useEffect(() => {
     dispatch(getBlogById({ blogId }));
+    
   }, [blogId, dispatch]);
 
   if (loading) {
