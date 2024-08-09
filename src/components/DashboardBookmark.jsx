@@ -23,9 +23,11 @@ const DashboardBookmark = ({ userId }) => {
     return <div>Error</div>;
   }
 
-  if (bookmarks.length === 0) {
+  if (Array.isArray(bookmarks) && bookmarks.length === 0) {
     return <div>No bookmarks available</div>;
   }
+
+  console.log(bookmarks);
 
   return (
     <div className='w-full max-w-screen-lg mx-auto p-4 flex flex-col items-center gap-10'>

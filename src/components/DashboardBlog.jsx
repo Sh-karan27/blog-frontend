@@ -25,6 +25,12 @@ const DashboardBlog = ({ id }) => {
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.blog);
 
+  useEffect(() => {
+    if (id) {
+      dispatch(userBlog({ userId: id }));
+    }
+  }, [id, dispatch]);
+
   const onClose = () => {
     setIsModalOpen(false);
     setBlogSelectedForEdit(null);
@@ -36,12 +42,6 @@ const DashboardBlog = ({ id }) => {
     }
   };
 
-  useEffect(() => {
-    if (id) {
-      dispatch(userBlog({ userId: id }));
-    }
-  }, [id, dispatch]);
-
   if (loading) {
     return <Loading />;
   }
@@ -50,7 +50,11 @@ const DashboardBlog = ({ id }) => {
     return <div>{error}</div>;
   }
 
-  if (!Array.isArray(data)) {
+  if (Array.isArray(data) && data.length === 0) {
+    return <div>No blogs available</div>;
+  }
+
+  if (!data) {
     return <div>No blogs available</div>;
   }
 
@@ -74,9 +78,10 @@ const DashboardBlog = ({ id }) => {
     setBookmark(true);
   };
 
+  console.log(data);
+
   return (
     <div className='w-full max-w-screen-lg mx-auto p-4 flex flex-col items-center gap-10'>
-      
       {data.map((curr, i) => (
         <div
           key={i}

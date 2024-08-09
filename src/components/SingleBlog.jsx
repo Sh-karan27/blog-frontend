@@ -9,6 +9,7 @@ import Comments from './Comments';
 
 import { BiSolidLike } from 'react-icons/bi';
 import { toggleBlogLike } from '../store/slices/likeSlice';
+import { toggleFollow } from '../store/slices/followerSlice';
 
 const SingleBlog = () => {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ const SingleBlog = () => {
     return <div>Error: {error}</div>;
   }
 
-  if (!data || !data.data) {
+  if (!data) {
     return <div>No data available</div>;
   }
 
@@ -41,39 +42,43 @@ const SingleBlog = () => {
     });
   };
 
+  const handleToggleFollow = (id) => {
+    dispatch(toggleFollow({ id })).then(() => [
+      dispatch(getBlogById({ blogId })),
+    ]);
+  };
+
   console.log(data);
 
   return (
     <div className='w-full flex flex-col items-center justify-center p-4 mt-10 min-h-screen'>
       <div className=' flex flex-col  items-center justify-center gap-5 '>
         <div className='p-4 flex flex-col items-center justify-center gap-5 w-full md:w-1/2 overflow-y-auto'>
-          <h1 className='text-3xl font-bold md:text-5xl'>{data.data.title}</h1>
+          <h1 className='text-3xl font-bold md:text-5xl'>{data.title}</h1>
           <div className='flex items-center justify-center gap-2'>
             <div className='text-xl flex items-center justify-center gap-2'>
               <span className='text-gray-400'>
-                {formatDate(data.data.createdAt)} By -{' '}
+                {formatDate(data.createdAt)} By -{' '}
               </span>
               <div className='flex items-center justify-center gap-2 '>
                 <img
-                  src={data.data.author?.profileImage.url}
+                  src={data.author?.profileImage.url}
                   alt=''
                   className='w-10 h-10 rounded-full'
                 />
-                <span className='font-semibold'>
-                  {data.data.author?.username}
-                </span>
-                <button className='bg-[#366AC4] text-sm px-2 py-1 rounded-md text-white'>
-                  {data.data.author.isFollowing === true
-                    ? 'Following'
-                    : 'Follow'}
+                <span className='font-semibold'>{data.author?.username}</span>
+                <button
+                  onClick={() => handleToggleFollow(data.author._id)}
+                  className='bg-[#366AC4] text-sm px-2 py-1 rounded-md text-white'>
+                  {data?.author.isFollowing === true ? 'Following' : 'Follow'}
                 </button>
               </div>
             </div>
           </div>
         </div>
-        {data.data.coverImage && (
+        {data.coverImage && (
           <img
-            src={data.data.coverImage.url}
+            src={data.coverImage.url}
             alt='Cover'
             className='w-1/2 object-cover'
           />
@@ -82,15 +87,17 @@ const SingleBlog = () => {
         <div className='flex items-left justify-left gap-5 w-1/2 text-2xl p-4'>
           <button
             className={`${
-              data.data.isLiked ? 'text-blue-500' : 'text-gray-500'
+              data.isLiked ? 'text-blue-500' : 'text-gray-500'
             } flex items-center justify-center`}
-            onClick={() => handleLike(data.data._id)}>
+            onClick={() => handleLike(data._id)}>
             <BiSolidLike />
-            {data.data.likeCount > 0 && <span className='text-sm'>{data.data.likeCount}</span>}
+            {data.likeCount > 0 && (
+              <span className='text-sm'>{data.likeCount}</span>
+            )}
           </button>
           <button className='text-gray-400 flex items-center justify-center gap-2'>
             <TfiComment />
-            <span className='text-sm'>{data.data.comments.length}</span>
+            <span className='text-sm'>{data.comments.length}</span>
           </button>
           <button className='text-gray-400'>
             <CiShare1 />
@@ -98,9 +105,9 @@ const SingleBlog = () => {
         </div>
         <div className='p-4 flex shadow-xl  flex-col items-center justify-center gap-5 w-1/2 '>
           <h3 className='text-xl md:text-xl text-gray-500'>
-            {data.data.description}
+            {data.description}
           </h3>
-          <p className='text-md md:text-md'>{data.data.content}</p>
+          <p className='text-md md:text-md'>{data.content}</p>
         </div>
       </div>
       <Comments blogId={blogId} />

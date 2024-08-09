@@ -66,7 +66,7 @@ export const getBlogById = createAsyncThunk(
     try {
       const response = await axiosInstance.get(`/blog/${blogId}`);
       console.log(response.data);
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -110,7 +110,7 @@ export const searchBlogs = createAsyncThunk(
   'blog/searchBlog',
   async ({ query, sortBy, sortType, limit, page }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("/blog/", {
+      const response = await axiosInstance.get('/blog/', {
         params: { query, sortBy, sortType, limit, page },
       });
       console.log(response.data);

@@ -27,7 +27,7 @@ const WatchHistory = () => {
   if (error) {
     return <div className='text-red-500 text-center'>{error.message}</div>;
   }
-
+// console.log(watchHistory)
   return (
     <div className='w-full max-w-screen-lg mx-auto p-4 flex flex-col items-center gap-10'>
       {watchHistory.map((curr, i) => (
@@ -58,7 +58,7 @@ const WatchHistory = () => {
             <NavLink
               to={`/blog/${curr._id}`}
               className='text-blue-500 text-sm flex items-center'>
-              Read More <MdArrowRightAlt />
+              Read More<MdArrowRightAlt />
             </NavLink>
           </div>
           <img

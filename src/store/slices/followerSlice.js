@@ -35,6 +35,18 @@ export const userProfileFollowing = createAsyncThunk(
   }
 );
 
+export const toggleFollow = createAsyncThunk(
+  'user/toggleFollow',
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`/follow/p/${id}`);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const userProfileSlice = createSlice({
   name: 'userProfile',
   initialState,
@@ -66,6 +78,19 @@ const userProfileSlice = createSlice({
       .addCase(userProfileFollowing.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(toggleFollow.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(toggleFollow.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(toggleFollow.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
       });
   },
 });

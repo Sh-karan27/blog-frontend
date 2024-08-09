@@ -29,6 +29,10 @@ const DashboardPlaylist = ({ id }) => {
     return <div className='text-red-500 text-center'>{error}</div>;
   }
 
+  if (Array.isArray(data) && data.length === 0) {
+    return <div>No playlist yet</div>;
+  }
+  console.log(data);
   return (
     <div className='w-full p-4'>
       <div className='flex flex-wrap justify-center gap-4'>
