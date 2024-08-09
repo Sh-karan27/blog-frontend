@@ -42,7 +42,7 @@ const DashboardBlog = ({ id }) => {
     }
   };
 
-  if (loading) {
+  if (loading ) {
     return <Loading />;
   }
 
@@ -50,7 +50,7 @@ const DashboardBlog = ({ id }) => {
     return <div>{error}</div>;
   }
 
-  if (Array.isArray(data) && data.length === 0) {
+  if (!Array.isArray(data) || data.length === 0) {
     return <div>No blogs available</div>;
   }
 

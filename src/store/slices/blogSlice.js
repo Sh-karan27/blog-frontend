@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 const initialState = {
   loading: null,
   error: null,
-  data: null,
+  data: [],
 };
 
 export const userBlog = createAsyncThunk(
@@ -13,7 +13,7 @@ export const userBlog = createAsyncThunk(
   async ({ userId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/blog/u/${userId}`);
-      // console.log(response.data.data);
+      console.log(response.data.data);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -65,7 +65,7 @@ export const getBlogById = createAsyncThunk(
   async ({ blogId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/blog/${blogId}`);
-      console.log(response.data);
+      console.log(response.data.data);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
