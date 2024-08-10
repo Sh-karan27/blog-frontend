@@ -15,12 +15,14 @@ import UserImage from '../components/UserImage';
 import Loading from '../components/Loading';
 import { CiEdit } from 'react-icons/ci';
 import UserDetails from '../components/UserDetails';
+import UserFollowingBox from '../components/UserFollowingBox';
 
 const Dashboard = () => {
   const [selectComponent, setSelectComponent] = useState('Blogs');
   const [editCoverImage, setEditCoverImage] = useState(false);
   const [editUserProfileImage, setEditUserProfileImage] = useState(false);
   const [userDetails, setUserDetails] = useState(false);
+  const [followingBox, setFollowingBox] = useState(false);
 
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector((state) => state.auth);
@@ -78,6 +80,14 @@ const Dashboard = () => {
   const onUpdate = async () => {
     await dispatch(userProfile());
   };
+
+  const handleFollowingBox = () => {
+    setFollowingBox(!followingBox);
+    console.log('clicked');
+  };
+
+
+ 
 
   return (
     <div className='w-full min-h-screen flex flex-col items-center'>
@@ -144,7 +154,9 @@ const Dashboard = () => {
               <h1 className='text-gray-500 text-lg'>
                 Followers: {follower?.followerCount}
               </h1>
-              <h1 className='text-gray-500 text-lg'>
+              <h1
+                className='text-gray-500 text-lg'
+                onClick={() => handleFollowingBox()}>
                 Following: {following?.followingCount}
               </h1>
             </div>
@@ -182,7 +194,7 @@ const Dashboard = () => {
       {editUserProfileImage && (
         <UserImage
           isOpen={editUserProfileImage}
-          onClose={onCloseForProfile}
+          onClose={handleuserProfileImageEdit}
           onUpdate={onUpdate}
         />
       )}
@@ -192,6 +204,14 @@ const Dashboard = () => {
           user={user}
           isOpen={userDetails}
           onUpdate={onUpdate}
+        />
+      )}
+      {followingBox && (
+        <UserFollowingBox
+          isOpen={followingBox}
+          onUpdate={onUpdate}
+          following={following?.followingList}
+          onClose={handleFollowingBox}
         />
       )}
     </div>
