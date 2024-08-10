@@ -6,6 +6,7 @@ const initialState = {
   loading: null,
   error: null,
   data: [],
+  searchBlogData: [],
 };
 
 export const userBlog = createAsyncThunk(
@@ -222,7 +223,7 @@ const blogSlice = createSlice({
       })
       .addCase(searchBlogs.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.searchBlogData = action.payload;
         state.error = null;
       });
   },
