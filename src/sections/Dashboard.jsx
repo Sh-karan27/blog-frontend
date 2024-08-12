@@ -16,6 +16,7 @@ import Loading from '../components/Loading';
 import { CiEdit } from 'react-icons/ci';
 import UserDetails from '../components/UserDetails';
 import UserFollowingBox from '../components/UserFollowingBox';
+import UserFollowerBox from '../components/UserFollowerBox';
 
 const Dashboard = () => {
   const [selectComponent, setSelectComponent] = useState('Blogs');
@@ -23,6 +24,7 @@ const Dashboard = () => {
   const [editUserProfileImage, setEditUserProfileImage] = useState(false);
   const [userDetails, setUserDetails] = useState(false);
   const [followingBox, setFollowingBox] = useState(false);
+  const [followerBox, setFollowerBox] = useState(false);
 
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector((state) => state.auth);
@@ -79,16 +81,16 @@ const Dashboard = () => {
 
   const onUpdate = async () => {
     await dispatch(userProfile());
+    await dispatch(userProfileFollowing({ id: user._id }));
+    await dispatch(userProfileFollower({ id: user._id }));
   };
 
   const handleFollowingBox = () => {
     setFollowingBox(!followingBox);
-    console.log('clicked');
   };
-
-
- 
-
+  const handleFollowerBox = () => {
+    setFollowerBox(!followerBox);
+  };
   return (
     <div className='w-full min-h-screen flex flex-col items-center'>
       <div className='relative w-full sm:w-3/4 mt-10 px-4 sm:px-0 group'>
@@ -151,7 +153,9 @@ const Dashboard = () => {
             <h3 className='text-lg sm:text-xl font-semibold'>{user?.email}</h3>
             <p className='text-base sm:text-lg text-gray-500'>{user?.bio}</p>
             <div className='flex gap-2'>
-              <h1 className='text-gray-500 text-lg'>
+              <h1
+                className='text-gray-500 text-lg'
+                onClick={() => handleFollowerBox()}>
                 Followers: {follower?.followerCount}
               </h1>
               <h1
@@ -212,6 +216,14 @@ const Dashboard = () => {
           onUpdate={onUpdate}
           following={following?.followingList}
           onClose={handleFollowingBox}
+        />
+      )}
+      {followerBox && (
+        <UserFollowerBox
+          isOpen={followerBox}
+          onUpdate={onUpdate}
+          follower={follower?.followerList}
+          onClose={handleFollowerBox}
         />
       )}
     </div>
