@@ -8,23 +8,16 @@ import Footer from './components/Footer';
 import ContactUs from './sections/ContactUs';
 import Error from './sections/Error';
 import Login from './components/LogIn';
-import { useSelector } from 'react-redux';
 import Dashboard from './sections/Dashboard';
 import SingleBlog from './components/SingleBlog';
 
-const ProtectedRoute = ({ element }) => {
-  const { token } = useSelector((state) => state.auth);
-  return token ? element : <Navigate to='/login' />;
-};
-
-const App = () => {
+const Routes = () => {
   return (
     <div className='flex flex-col min-h-screen'>
-     { <BrowserRouter>
+      <BrowserRouter>
         <Navbar />
         <div className='flex-grow'>
           <Routes>
-            {/* <Route path='/login' element={<Login />} /> */}
             <Route path='/' element={<Home />} />
             <Route path='/about' element={<About />} />
             <Route path='/blogs' element={<Blog />} />
@@ -35,9 +28,9 @@ const App = () => {
           </Routes>
         </div>
         <Footer />
-      </BrowserRouter>}
+      </BrowserRouter>
     </div>
   );
 };
 
-export default App;
+export default Routes;
