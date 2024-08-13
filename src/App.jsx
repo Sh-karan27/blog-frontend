@@ -18,14 +18,15 @@ const ProtectedRoute = ({ element }) => {
 };
 
 const App = () => {
+  const { token } = useSelector((state) => state.auth);
   return (
     <div className="flex flex-col min-h-screen">
-      {
+      {token ? (
         <BrowserRouter>
           <Navbar />
           <div className="flex-grow">
             <Routes>
-              <Route path="/login" element={<Login />} />
+              {/* <Route path="/login" element={<Login />} /> */}
               <Route path="/" element={<ProtectedRoute element={<Home />} />} />
               <Route
                 path="/about"
@@ -52,7 +53,13 @@ const App = () => {
           </div>
           <Footer />
         </BrowserRouter>
-      }
+      ) : (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      )}
     </div>
   );
 };
