@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import Contact from "../assets/ContactUs.jpg";
+import background from "../assets/LoginBg.jpg";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +21,9 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen w-full flex items-center justify-center p-4 mt-10">
+    <div className="h-screen w-full flex items-center justify-center p-4 mt-10" style={{
+      backgroundImage: `url()`
+    }}>
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg flex flex-col lg:flex-row overflow-hidden">
         <img
           src={Contact}
