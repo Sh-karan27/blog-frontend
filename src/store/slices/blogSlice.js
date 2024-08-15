@@ -91,6 +91,7 @@ export const createBlog = createAsyncThunk(
   'blog/createBlog',
   async (formData, { rejectWithValue }) => {
     try {
+      
       const token = localStorage.getItem('accessToken'); // replace with your token retrieval method
       const response = await axiosInstance.post('/blog/', formData, {
         headers: {

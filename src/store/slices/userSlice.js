@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 const initialState = {
   user: null,
-  token: localStorage.getItem('accessToken') || null,
+  token: null,
   loading: false,
   error: null,
   watchHistory: [],
@@ -75,7 +75,7 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await axiosInstance.post('/users/logout');
-      // localStorage.removeItem('accessToken');
+      localStorage.removeItem('accessToken');
       return true;
     } catch (error) {
       return rejectWithValue(error.response.data);
