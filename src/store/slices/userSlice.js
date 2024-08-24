@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../axiosInstance';
 import { toast } from 'react-toastify';
+import { formatDate } from '../../helper';
 
 const initialState = {
   user: null,
@@ -10,6 +11,25 @@ const initialState = {
   watchHistory: [],
   bookmarks: [],
 };
+
+export const registerUser = createAsyncThunk(
+  'auth/registerUser',
+  async ({ formData }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post('/users/register', {
+        formData,
+      });
+      const { accessToken, user } = response.data.data;
+
+      localStorage.setItem('accessToken', accessToken);
+      console.log(response.data);
+
+      return { user, token: accessToken };
+    } catch (error) {
+      rejectWithValue(error.reponse.data);
+    }
+  }
+);
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
@@ -174,6 +194,20 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.error = null;
+      })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
