@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { CiImageOn } from "react-icons/ci";
 import { FaChalkboardUser } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../store/slices/userSlice";
 
 const Signup = ({ setSignUp }) => {
   const [formData, setFormData] = useState({
@@ -8,31 +10,39 @@ const Signup = ({ setSignUp }) => {
     email: "",
     bio: "",
     password: "",
-    coverImage: "",
-    profileImage: "",
+    coverImage: null,
+    profileImage: null,
   });
+
+  const dispatch = useDispatch();
+  const { loading, error, user } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: files ? files[0] : value, // Handle file inputs separately
-    }));
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-
-    setFormData({
-      username: "",
-      email: "",
-      bio: "",
-      password: "",
-      coverImage: "",
-      profileImage: "",
+    dispatch(registerUser(formData)).then(() => {
+      // Reset form after successful registration
+      
+        setFormData({
+          username: "",
+          email: "",
+          password: "",
+          bio: "",
+          profileImage: null,
+          coverImage: null,
+        });
+      
     });
   };
+  console.log(user);
 
   return (
     <div className="w-[35rem] h-[50rem] glass-background rounded-lg shadow-lg flex flex-col items-center justify-center">
@@ -102,14 +112,7 @@ const Signup = ({ setSignUp }) => {
           {/* Cover Image Input */}
           <label className="flex items-center space-x-2 text-gray-400">
             <CiImageOn size={24} />
-            <input
-              type="file"
-              name="coverImage"
-              accept="image/*"
-              className="hidden"
-              id="coverImageInput"
-              onChange={handleChange}
-            />
+            <input type="file" name="coverImage" onChange={handleChange} />
             <label htmlFor="coverImageInput" className="cursor-pointer">
               Upload Cover Image
             </label>
@@ -120,11 +123,9 @@ const Signup = ({ setSignUp }) => {
             <FaChalkboardUser size={24} />
             <input
               type="file"
-              accept="image/*"
-              className="hidden"
-              id="profileImageInput"
               name="profileImage"
               onChange={handleChange}
+              required
             />
             <label htmlFor="profileImageInput" className="cursor-pointer">
               Upload Profile Image
