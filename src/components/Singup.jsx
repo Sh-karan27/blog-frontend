@@ -16,32 +16,37 @@ const Signup = ({ setSignUp }) => {
 
   const dispatch = useDispatch();
   const { loading, error, user } = useSelector((state) => state.auth);
-
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (files) {
-      setFormData({ ...formData, [name]: files[0] });
+    if (name === "coverImage" || name === "profileImage") {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: files[0], // Set the file object directly
+      }));
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(registerUser(formData)).then(() => {
+    console.log(formData);
+    dispatch(registerUser({ formData })).then(() => {
       // Reset form after successful registration
-      
-        setFormData({
-          username: "",
-          email: "",
-          password: "",
-          bio: "",
-          profileImage: null,
-          coverImage: null,
-        });
-      
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+        bio: "",
+        profileImage: null,
+        coverImage: null,
+      });
     });
   };
+
   console.log(user);
 
   return (
@@ -110,26 +115,26 @@ const Signup = ({ setSignUp }) => {
           </label>
 
           {/* Cover Image Input */}
-          <label className="flex items-center space-x-2 text-gray-400">
-            <CiImageOn size={24} />
-            <input type="file" name="coverImage" onChange={handleChange} />
-            <label htmlFor="coverImageInput" className="cursor-pointer">
-              Upload Cover Image
-            </label>
+          <label className="flex flex-col text-gray-400">
+            Cover Image
+            <input
+              type="file"
+              name="coverImage"
+              onChange={handleChange}
+              // Removed value attribute for file input
+            />
           </label>
 
           {/* Profile Image Input */}
-          <label className="flex items-center space-x-2 text-gray-400">
-            <FaChalkboardUser size={24} />
+          <label className="flex flex-col text-gray-400">
+            Profile Image
             <input
               type="file"
               name="profileImage"
               onChange={handleChange}
+              // Removed value attribute for file input
               required
             />
-            <label htmlFor="profileImageInput" className="cursor-pointer">
-              Upload Profile Image
-            </label>
           </label>
 
           <button
