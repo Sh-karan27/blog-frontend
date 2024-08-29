@@ -16,25 +16,21 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async ({ formData }, { rejectWithValue }) => {
     try {
-      const multipartFormData = new FormData();
-      multipartFormData.append("username", formData.username);
-      multipartFormData.append("email", formData.email);
-      multipartFormData.append("password", formData.password);
-      multipartFormData.append("bio", formData.bio);
-      if (formData.coverImage)
-        multipartFormData.append("coverImage", formData.coverImage);
-      if (formData.profileImage)
-        multipartFormData.append("profileImage", formData.profileImage);
+      // const multipartFormData = new FormData();
+      // multipartFormData.append("username", formData.username);
+      // multipartFormData.append("email", formData.email);
+      // multipartFormData.append("password", formData.password);
+      // multipartFormData.append("bio", formData.bio);
+      // if (formData.coverImage)
+      //   multipartFormData.append("coverImage", formData.coverImage);
+      // if (formData.profileImage)
+      //   multipartFormData.append("profileImage", formData.profileImage);
 
-      const response = await axiosInstance.post(
-        "/users/register",
-        multipartFormData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axiosInstance.post("/users/register", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       const { accessToken, user } = response.data.data;
       localStorage.setItem("accessToken", accessToken);
