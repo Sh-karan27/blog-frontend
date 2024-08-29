@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink } from 'react-router-dom';
 import Hamburger from './Hamburger'; // Adjust the path as necessary
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../store/slices/userSlice';
@@ -40,16 +40,17 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(logoutUser());
+    dispatch(logoutUser()).then((result) => {
+      if (result.meta.requestStatus === 'fulfilled') {
+        Navigate('/');
+      }
+    });
   };
 
   const handleCreateBlog = () => {
     setIsOpen(!isOpen);
   };
 
-  const onUpdate = () => {
-    
-  }
 
   const onClose = () => {
     setIsOpen(!isOpen);
