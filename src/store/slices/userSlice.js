@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../../axiosInstance";
-import { toast } from "react-toastify";
-import { formatDate } from "../../helper";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axiosInstance from '../../axiosInstance';
+import { toast } from 'react-toastify';
+import { formatDate } from '../../helper';
 
 const initialState = {
   user: null,
@@ -32,35 +32,35 @@ const initialState = {
 // );
 
 export const registerUser = createAsyncThunk(
-  "user/registerUser",
+  'user/registerUser',
   async (userData, { rejectWithValue }) => {
     console.log(userData);
     try {
       // Creating a FormData object to handle image files and other user data
       const formData = new FormData();
-      formData.append("username", userData.username);
-      formData.append("email", userData.email);
-      formData.append("password", userData.password);
-      formData.append("bio", userData.bio);
+      formData.append('username', userData.username);
+      formData.append('email', userData.email);
+      formData.append('password', userData.password);
+      formData.append('bio', userData.bio);
 
       // Append images to formData
       if (userData.profileImage) {
-        formData.append("profileImage", userData.profileImage);
+        formData.append('profileImage', userData.profileImage);
       }
       if (userData.coverImage) {
-        formData.append("coverImage", userData.coverImage);
+        formData.append('coverImage', userData.coverImage);
       }
-
-      const response = await axiosInstance.post("/users/register", {formData}, {
+      console.log(formData);
+      const response = await axiosInstance.post('/users/register', formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
 
       const { accessToken, user } = response.data.data;
 
-      localStorage.setItem("accessToken", accessToken);
-      
+      localStorage.setItem('accessToken', accessToken);
+
       console.log(response.data);
 
       return { user, token: accessToken };
@@ -76,16 +76,16 @@ export const registerUser = createAsyncThunk(
 );
 
 export const loginUser = createAsyncThunk(
-  "auth/loginUser",
+  'auth/loginUser',
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post("/users/login", {
+      const response = await axiosInstance.post('/users/login', {
         email,
         password,
       });
       const { accessToken, user } = response.data.data;
 
-      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem('accessToken', accessToken);
       console.log(response.data);
 
       return { user, token: accessToken };
@@ -96,10 +96,10 @@ export const loginUser = createAsyncThunk(
 );
 
 export const userWatchHistory = createAsyncThunk(
-  "user/watchHistory",
+  'user/watchHistory',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("/users/history");
+      const response = await axiosInstance.get('/users/history');
       // console.log(response.data.data);
       return response.data.data;
     } catch (error) {
@@ -109,7 +109,7 @@ export const userWatchHistory = createAsyncThunk(
 );
 
 export const userBookmarks = createAsyncThunk(
-  "/user/bookmarks",
+  '/user/bookmarks',
   async ({ userId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/bookmark/user/${userId}`);
@@ -122,10 +122,10 @@ export const userBookmarks = createAsyncThunk(
 );
 
 export const userProfile = createAsyncThunk(
-  "user/fetchUserData",
+  'user/fetchUserData',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("/users/current-user");
+      const response = await axiosInstance.get('/users/current-user');
       console.log(response.data.data);
       return response.data.data;
     } catch (error) {
@@ -135,11 +135,11 @@ export const userProfile = createAsyncThunk(
 );
 
 export const logoutUser = createAsyncThunk(
-  "auth/logoutUser",
+  'auth/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
-      await axiosInstance.post("/users/logout");
-      localStorage.removeItem("accessToken");
+      await axiosInstance.post('/users/logout');
+      localStorage.removeItem('accessToken');
       return true;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -148,7 +148,7 @@ export const logoutUser = createAsyncThunk(
 );
 
 export const toggleBookmark = createAsyncThunk(
-  "/toggle/:blogId",
+  '/toggle/:blogId',
   async ({ blogId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(`bookmark/toggle/${blogId}`);
@@ -161,15 +161,15 @@ export const toggleBookmark = createAsyncThunk(
 );
 
 export const updateCoverImage = createAsyncThunk(
-  "users/updateCoverImage",
+  'users/updateCoverImage',
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.patch(
-        "/users/cover-image",
+        '/users/cover-image',
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
         }
       );
@@ -183,15 +183,15 @@ export const updateCoverImage = createAsyncThunk(
 );
 
 export const updateProfileImage = createAsyncThunk(
-  "users/updateProfileImage",
+  'users/updateProfileImage',
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.patch(
-        "users/profile-image",
+        'users/profile-image',
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
         }
       );
@@ -204,15 +204,15 @@ export const updateProfileImage = createAsyncThunk(
 );
 
 export const updateAccountDetails = createAsyncThunk(
-  "user/updateDetails",
+  'user/updateDetails',
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.patch(
-        "users/update-account",
+        'users/update-account',
         formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -226,7 +226,7 @@ export const updateAccountDetails = createAsyncThunk(
 );
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     setUser: (state, action) => {
@@ -330,12 +330,12 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.error = null;
-        toast.success("Blog Update Cover Image!");
+        toast.success('Blog Update Cover Image!');
       })
       .addCase(updateCoverImage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error("Failed to Update Cover Image!");
+        toast.error('Failed to Update Cover Image!');
       })
       .addCase(updateProfileImage.pending, (state) => {
         state.loading = true;
