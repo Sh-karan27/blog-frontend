@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { CiImageOn } from 'react-icons/ci';
-import { FaChalkboardUser } from 'react-icons/fa6';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../store/slices/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = ({ setSignUp }) => {
   const [formData, setFormData] = useState({
@@ -13,20 +12,16 @@ const Signup = ({ setSignUp }) => {
     coverImage: null,
     profileImage: null,
   });
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, error, user } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.auth);
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === 'coverImage') {
+    if (files && files.length > 0) {
       setFormData((prevState) => ({
         ...prevState,
-        coverImage: files[0], // Set the file object directly
-      }));
-    } else if (name === 'profileImage') {
-      setFormData((prevState) => ({
-        ...prevState,
-        profileImage: files[0], // Set the file object directly
+        [name]: files[0],
       }));
     } else {
       setFormData((prevState) => ({
@@ -39,34 +34,31 @@ const Signup = ({ setSignUp }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
-    dispatch(registerUser({ formData }))
-      .then((result) => {
-        if (result.meta.requestStatus === 'fulfilled') {
-          navigate('/');
-        }
-      })
-      .then(() => {
-        // Reset form after successful registration
-        setFormData({
-          username: '',
-          email: '',
-          password: '',
-          bio: '',
-          profileImage: null,
-          coverImage: null,
-        });
-      });
+    dispatch(registerUser({ formData })).then((result) => {
+      if (result.meta.requestStatus === 'fulfilled') {
+        navigate('/');
+      }
+
+      setSignUp(false);
+    });
+    // Reset form after dispatch
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+      bio: '',
+      profileImage: null,
+      coverImage: null,
+    });
   };
 
   if (loading) {
-    return <div>Loading</div>;
+    return <div>Loading...</div>;
   }
 
   if (error) {
     console.log(error);
   }
-
-  console.log(user);
 
   return (
     <div className='w-[35rem] h-[50rem] glass-background rounded-lg shadow-lg flex flex-col items-center justify-center'>
@@ -135,12 +127,7 @@ const Signup = ({ setSignUp }) => {
           {/* Cover Image Input */}
           <label className='flex flex-col text-gray-400'>
             Cover Image
-            <input
-              type='file'
-              name='coverImage'
-              onChange={handleChange}
-              // Removed value attribute for file input
-            />
+            <input type='file' name='coverImage' onChange={handleChange} />
           </label>
 
           {/* Profile Image Input */}
@@ -150,7 +137,6 @@ const Signup = ({ setSignUp }) => {
               type='file'
               name='profileImage'
               onChange={handleChange}
-              // Removed value attribute for file input
               required
             />
           </label>

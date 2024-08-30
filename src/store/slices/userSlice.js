@@ -34,8 +34,8 @@ export const registerUser = createAsyncThunk(
 
       const { accessToken, user } = response.data.data;
       localStorage.setItem('accessToken', accessToken);
-
-      return { user, token: accessToken };
+      console.log(user, accessToken);
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data); // Fix: correct error access and return
     }
@@ -215,9 +215,10 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.user = action.payload;
+        state.token = null;
         state.error = null;
+        toast.success('User registered!Login with your credentials');
       })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
@@ -227,8 +228,17 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(logoutUser.rejected, (action, state) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -238,15 +248,7 @@ const authSlice = createSlice({
         state.token = null;
         state.error = false;
       })
-      .addCase(logoutUser.pending, (state) => {
-        state.loading = true;
-        state.error = false;
-      })
-      .addCase(logoutUser.rejected, (action, state) => {
-        state.loading = false;
 
-        state.error = action.payload;
-      })
       .addCase(userProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
