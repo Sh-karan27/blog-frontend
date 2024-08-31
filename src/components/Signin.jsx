@@ -13,9 +13,11 @@ const Signin = ({ setSignUp }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(loginUser({ email, password })).then((result) => {
-      if (result.meta.requestStatus === 'fulfilled') {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
         navigate('/');
       }
+      window.location.reload();
     });
   };
 

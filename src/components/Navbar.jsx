@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import Hamburger from './Hamburger'; // Adjust the path as necessary
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../store/slices/userSlice';
 import { IoCreateOutline } from 'react-icons/io5';
 import CreateBlog from './CreateBlog';
+import Loading from './Loading';
 
 const navLinks = [
   {
@@ -37,15 +38,23 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  // const { loading, error } = useSelector((state) => state.auth);
+
+  // if (loading) {
+  //   return <Loading />;
+  // }
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(logoutUser()).then((result) => {
-      if (result.meta.requestStatus === 'fulfilled') {
-        navigate('/');
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        navigate('/login');
       }
+      window.location.reload();
     });
   };
 
@@ -83,7 +92,7 @@ const Navbar = () => {
               <IoCreateOutline />
             </button>
             <button
-              onClick={ handleLogout}
+              onClick={handleLogout}
               className='border border-black hover:bg-black hover:text-white rounded-3xl px-5 py-1 font-semibold'>
               LogOut
             </button>

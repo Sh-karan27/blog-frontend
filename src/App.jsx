@@ -14,12 +14,12 @@ import SingleBlog from './components/SingleBlog';
 import Cookies from 'js-cookie';
 
 const ProtectedRoute = ({ element }) => {
-  const { token } = useSelector((state) => state.auth);
+  const token = localStorage.getItem('accessToken');
   return token ? element : <Navigate to='/login' />;
 };
 
 const App = () => {
-  const { token } = useSelector((state) => state.auth);
+  const token = localStorage.getItem('accessToken');
 
   return (
     <div className='flex flex-col min-h-screen'>
@@ -58,7 +58,7 @@ const App = () => {
       ) : (
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<Login />} />
+            <Route path='/login' element={<Login />} />
           </Routes>
         </BrowserRouter>
       )}
