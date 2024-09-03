@@ -20,6 +20,19 @@ export const getUserPlaylist = createAsyncThunk(
   }
 );
 
+export const getPlaylistById = createAsyncThunk(
+  '/playlist/fetchUserPlaylist',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/playlist/${id}`);
+      console.log(response.data.data);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const playlistSlice = createSlice({
   name: 'playlist',
   initialState,
@@ -38,6 +51,19 @@ const playlistSlice = createSlice({
         state.loading = null;
         state.error = null;
         state.data = action.payload;
+      })
+      .addCase(getPlaylistById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getPlaylistById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
+      })
+      .addCase(getPlaylistById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

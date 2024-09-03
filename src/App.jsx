@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import Dashboard from './sections/Dashboard';
 import SingleBlog from './components/SingleBlog';
 import Cookies from 'js-cookie';
+import PlaylistPage from './components/PlaylistPage';
 
 const ProtectedRoute = ({ element }) => {
   const token = localStorage.getItem('accessToken');
@@ -50,6 +51,7 @@ const App = () => {
                 path='/contact'
                 element={<ProtectedRoute element={<ContactUs />} />}
               />
+              <Route path='/playlist/:playlistId' element={<PlaylistPage />} />
               <Route path='*' element={<Error />} />
             </Routes>
           </div>
