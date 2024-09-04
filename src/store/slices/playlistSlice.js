@@ -33,6 +33,28 @@ export const getPlaylistById = createAsyncThunk(
   }
 );
 
+export const editPlaylist = createAsyncThunk(
+  '/playlist/editPlaylist',
+  async ({ formData, playlistId }, { rejectWithValue }) => {
+    console.log(formData);
+    try {
+      const response = await axiosInstance.patch(
+        `/playlist/${playlistId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const playlistSlice = createSlice({
   name: 'playlist',
   initialState,
@@ -62,6 +84,19 @@ const playlistSlice = createSlice({
         state.error = null;
       })
       .addCase(getPlaylistById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(editPlaylist.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(editPlaylist.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
+      })
+      .addCase(editPlaylist.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

@@ -31,14 +31,26 @@ const PlaylistPage = () => {
   return (
     <div className='w-full h-full flex flex-col items-center justify-center p-4'>
       <div className='w-full flex flex-col items-left justify-center mt-10 gap-5 border-b p-2'>
+        <div className='flex items-center justify-left gap-2'>
+          <img
+            src={data?.playlistBlogs?.owner[0].profileImage?.url}
+            alt='profileImage'
+            className='w-[4rem] h-[4rem] rounded-full'
+          />
+          <h1 className='text-3xl text-gray-500'>
+            {data?.playlistBlogs?.owner[0].username}
+          </h1>
+        </div>
         <h1 className='text-5xl'>{data?.playList?.name}</h1>
-        <h3 className='text-3xl text-gray-500'>{data?.playList?.description}</h3>
+        <h3 className='text-3xl text-gray-500'>
+          {data?.playList?.description}
+        </h3>
       </div>
       <div className='w-full h-full p-4 flex flex-col items-center gap-10'>
         {data?.playlistBlogs?.blogs.map((curr, i) => (
           <div
             key={i}
-            className='flex flex-col md:flex-row items-center md:items-start justify-between w-full border-b p-4 gap-4'>
+            className='flex flex-col md:flex-row items-center md:items-start justify-center w-full border-b p-4 gap-4'>
             <div className='flex flex-col items-start justify-start p-4 w-full md:w-1/2 gap-2'>
               <h1 className='font-bold text-lg mb-2'>{curr.title}</h1>
               <p className='text-sm text-gray-600 mb-4 line-clamp-3'>
