@@ -17,6 +17,7 @@ import { CiEdit } from 'react-icons/ci';
 import UserDetails from '../components/UserDetails';
 import UserFollowingBox from '../components/UserFollowingBox';
 import UserFollowerBox from '../components/UserFollowerBox';
+import DashboardLikedBlogs from '../components/DashboardLikedBlogs';
 
 const Dashboard = () => {
   const [selectComponent, setSelectComponent] = useState('Blogs');
@@ -54,6 +55,9 @@ const Dashboard = () => {
         return user ? <DashboardBookmark userId={user._id} /> : <Loading />;
       case 'WatchHistory':
         return user ? <WatchHistory history={user._id} /> : <Loading />;
+      case 'Liked':
+        return user ? <DashboardLikedBlogs /> : <Loading />;
+
       default:
         return <DashboardBlog />;
     }

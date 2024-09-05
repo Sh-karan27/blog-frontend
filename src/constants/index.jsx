@@ -211,5 +211,8 @@ export const userProfileNav = [
     name: 'WatchHistory',
     link: '/contact',
   },
-  
+  {
+    name: 'Liked',
+    link: '/liked',
+  },
 ];

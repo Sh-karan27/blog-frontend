@@ -35,6 +35,20 @@ export const toggleBlogLike = createAsyncThunk(
   }
 );
 
+export const getLikedBlogs = createAsyncThunk(
+  '/likes/likedBlogs',
+
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/likes/blogs');
+      console.log(response.data);
+      return response.data.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const likeSlice = createSlice({
   name: 'like',
   initialState,
@@ -63,6 +77,19 @@ const likeSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(toggleBlogLike.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
+      })
+      .addCase(getLikedBlogs.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getLikedBlogs.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getLikedBlogs.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
         state.error = null;

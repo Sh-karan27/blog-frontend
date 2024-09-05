@@ -136,7 +136,7 @@ const DashboardBlog = ({ id }) => {
       ))}
 
       {blogSelectedForEdit && (
-        <EditBlogBox
+        <EditBl ogBox
           blog={blogSelectedForEdit}
           isOpen={isModalOpen}
           onClose={onClose}
