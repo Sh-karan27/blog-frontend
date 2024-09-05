@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
-import { Navigate, NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Hamburger from './Hamburger'; // Adjust the path as necessary
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../store/slices/userSlice';
 import { IoCreateOutline } from 'react-icons/io5';
 import CreateBlog from './CreateBlog';
 import Loading from './Loading';
+import { IoSearchOutline } from 'react-icons/io5';
 
 const navLinks = [
   {
@@ -87,10 +88,13 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
-          <div className='hidden md:flex items-center justify-end gap-2'>
+          <div className='hidden md:flex items-center justify-end gap-5'>
             <button className='text-3xl' onClick={() => handleCreateBlog()}>
               <IoCreateOutline />
             </button>
+            <NavLink to='/search'>
+              <IoSearchOutline className='text-3xl' />
+            </NavLink>
             <button
               onClick={handleLogout}
               className='border border-black hover:bg-black hover:text-white rounded-3xl px-5 py-1 font-semibold'>

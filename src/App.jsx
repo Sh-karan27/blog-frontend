@@ -13,6 +13,7 @@ import Dashboard from './sections/Dashboard';
 import SingleBlog from './components/SingleBlog';
 import Cookies from 'js-cookie';
 import PlaylistPage from './components/PlaylistPage';
+import SearchUser from './components/SearchUser';
 
 const ProtectedRoute = ({ element }) => {
   const token = localStorage.getItem('accessToken');
@@ -52,6 +53,7 @@ const App = () => {
                 element={<ProtectedRoute element={<ContactUs />} />}
               />
               <Route path='/playlist/:playlistId' element={<PlaylistPage />} />
+              <Route path='/search' element={<SearchUser />} />
               <Route path='*' element={<Error />} />
             </Routes>
           </div>
