@@ -192,6 +192,21 @@ export const updateAccountDetails = createAsyncThunk(
   }
 );
 
+export const getUserProfile = createAsyncThunk(
+  '/user/channel',
+
+  async ({ username }, { rejectWithValue }) => {
+    console.log(username);
+    try {
+      const response = await axiosInstance.get(`/users/c/${username}`);
+      console.log(response.data.data);
+      return response.data.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -341,6 +356,19 @@ const authSlice = createSlice({
       .addCase(updateAccountDetails.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(getUserProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getUserProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
         state.error = null;
       });
   },
