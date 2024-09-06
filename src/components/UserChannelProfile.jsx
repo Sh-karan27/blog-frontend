@@ -6,7 +6,7 @@ import { formatDate } from '../helper';
 const UserChannelProfile = ({ data }) => {
   console.log(data);
   return (
-    <div>
+    <div className='w-full h-full max-w-screen-lg mx-auto p-4 flex flex-col items-start gap-10'>
       {data?.map((curr, i) => (
         <div
           key={i}
@@ -30,7 +30,7 @@ const UserChannelProfile = ({ data }) => {
 
             <div>
               <NavLink
-                to={`/blog/${curr._id}`}
+                to={`/channel/${curr.username}`}
                 className='text-blue-500 text-sm flex items-center'>
                 Read More <MdArrowRightAlt />
               </NavLink>
@@ -41,7 +41,7 @@ const UserChannelProfile = ({ data }) => {
           </div>
 
           <img
-            src={curr.coverImage.url}
+            src={curr.profileImage.url}
             alt={curr.name}
             className='w-full md:w-[150px] h-[150px] object-cover rounded-full'
           />

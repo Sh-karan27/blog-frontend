@@ -25,7 +25,7 @@ const SearchUser = () => {
   };
 
   return (
-    <div className='w-full h-screen flex flex-col items-center mt-10'>
+    <div className='w-full h-screen flex flex-col items-center mt-10 gap-5'>
       <div className='w-3/4 flex items-center justify-center gap-5'>
         <input
           className='border-b-2 p-2 w-1/2 outline-none'
@@ -37,7 +37,7 @@ const SearchUser = () => {
           <IoSearchOutline />
         </button>
       </div>
-      <div className='w-full h-full flex items-center justify-center '>
+      <div className='w-full h-full sm:w-3/4 mt-10 flex items-center justify-center  sm:px-0 overflow-y-scroll'>
         {data ? <UserChannelProfile data={data} /> : <div>Not found</div>}
       </div>
     </div>
