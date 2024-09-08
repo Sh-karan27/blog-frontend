@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../../axiosInstance';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axiosInstance from "../../axiosInstance";
 
 const initialState = {
   loading: null,
@@ -8,7 +8,7 @@ const initialState = {
 };
 
 export const getUserPlaylist = createAsyncThunk(
-  '/playlist/fetchUserPlaylists',
+  "/playlist/fetchUserPlaylists",
   async ({ userId }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/playlist/user/${userId}`);
@@ -21,7 +21,7 @@ export const getUserPlaylist = createAsyncThunk(
 );
 
 export const getPlaylistById = createAsyncThunk(
-  '/playlist/fetchUserPlaylist',
+  "/playlist/fetchUserPlaylist",
   async (id, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/playlist/${id}`);
@@ -34,7 +34,7 @@ export const getPlaylistById = createAsyncThunk(
 );
 
 export const editPlaylist = createAsyncThunk(
-  '/playlist/editPlaylist',
+  "/playlist/editPlaylist",
   async ({ formData, playlistId }, { rejectWithValue }) => {
     console.log(formData);
     try {
@@ -43,7 +43,7 @@ export const editPlaylist = createAsyncThunk(
         formData,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
@@ -55,8 +55,21 @@ export const editPlaylist = createAsyncThunk(
   }
 );
 
+export const deletePLaylist = createAsyncThunk(
+  "/playlist/delete",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.delete(`/playlist/${id}`);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const playlistSlice = createSlice({
-  name: 'playlist',
+  name: "playlist",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -99,6 +112,19 @@ const playlistSlice = createSlice({
       .addCase(editPlaylist.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(deletePLaylist.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deletePLaylist.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deletePLaylist.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
       });
   },
 });
