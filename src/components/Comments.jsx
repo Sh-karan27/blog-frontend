@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   addComment,
   deleteCommentById,
   editCommentById,
   getBlogComments,
-} from "../store/slices/commentSlice";
-import { MdDelete } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { formatDate } from "../helper";
-import Loading from "./Loading";
-import { CiEdit } from "react-icons/ci";
-import { BiSolidLike } from "react-icons/bi";
-import { current } from "@reduxjs/toolkit";
-import { toggleCommentLike } from "../store/slices/likeSlice";
-import { userProfile } from "../store/slices/userSlice";
+} from '../store/slices/commentSlice';
+import { MdDelete } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
+import { formatDate } from '../helper';
+import Loading from './Loading';
+import { CiEdit } from 'react-icons/ci';
+import { BiSolidLike } from 'react-icons/bi';
+import { current } from '@reduxjs/toolkit';
+import { toggleCommentLike } from '../store/slices/likeSlice';
+import { userProfile } from '../store/slices/userSlice';
 const Comments = ({ blogId }) => {
   const [formData, setFormData] = useState({
-    content: "",
+    content: '',
   });
 
   const [editCommentId, setEditCommentId] = useState(null);
   const [editContent, setEditContent] = useState({
-    content: "",
+    content: '',
   });
 
   const dispatch = useDispatch();
@@ -34,15 +34,15 @@ const Comments = ({ blogId }) => {
   const { loading, error, comment } = useSelector((state) => state.comment);
   const { user } = useSelector((state) => state.auth);
 
-  console.log(user)
+  console.log(user);
   if (loading) {
     return <Loading />;
   }
 
   if (error) {
     return (
-      <div className="text-red-500">
-        Error: {error.message || "An error occurred"}
+      <div className='text-red-500'>
+        Error: {error.message || 'An error occurred'}
       </div>
     );
   }
@@ -64,7 +64,7 @@ const Comments = ({ blogId }) => {
     await dispatch(addComment({ formData, blogId }));
     await dispatch(getBlogComments({ blogId }));
     setFormData({
-      content: "",
+      content: '',
     });
   };
 
@@ -86,18 +86,20 @@ const Comments = ({ blogId }) => {
     });
   };
 
-  const handleSaveEdit =  (e) => {
+  const handleSaveEdit = (e) => {
     e.preventDefault();
     console.log(editCommentId);
     console.log(editContent);
-    dispatch(editCommentById({ editContent, editCommentId }));
-     dispatch(getBlogComments({ blogId }));
-    setEditCommentId(null);
+    dispatch(editCommentById({ editContent, editCommentId })).then(() => {
+      dispatch(getBlogComments({ blogId }));
+      setEditCommentId(null);
+    });
+
   };
 
   const handleCancelEdit = () => {
     setEditCommentId(null);
-    setEditContent("");
+    setEditContent('');
   };
 
   const handleToggleCommentLike = (commentId) => {
@@ -110,96 +112,91 @@ const Comments = ({ blogId }) => {
   console.log(comment);
 
   return (
-    <div className="flex flex-col items-start justify-start w-full p-4 gap-5 lg:w-3/4">
-      <h1 className="text-3xl text-[#366AC4] font-semibold">Comments</h1>
-      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3">
+    <div className='flex flex-col items-start justify-start w-full p-4 gap-5 lg:w-3/4'>
+      <h1 className='text-3xl text-[#366AC4] font-semibold'>Comments</h1>
+      <div className='w-full flex flex-col sm:flex-row items-center justify-between gap-3'>
         <input
-          type="text"
-          placeholder="Add comment"
+          type='text'
+          placeholder='Add comment'
           onChange={handleOnChange}
-          className="border w-full sm:w-3/4 rounded-lg border-r-0 sm:rounded-r-none p-3 sm:p-4"
+          className='border w-full sm:w-3/4 rounded-lg border-r-0 sm:rounded-r-none p-3 sm:p-4'
           value={formData.content}
         />
         <button
           onClick={handleSubmit}
-          className="p-3 sm:p-4 rounded-lg w-full sm:w-1/4 sm:rounded-l-none border-l-0 bg-blue-500 text-white hover:bg-blue-600 transition-colors"
-        >
+          className='p-3 sm:p-4 rounded-lg w-full sm:w-1/4 sm:rounded-l-none border-l-0 bg-blue-500 text-white hover:bg-blue-600 transition-colors'>
           Add
         </button>
       </div>
       {!Array.isArray(comment) || comment.length === 0 ? (
-        <div className="text-gray-600">No comments yet</div>
+        <div className='text-gray-600'>No comments yet</div>
       ) : (
-        <div className="flex flex-col items-center justify-start w-full gap-5 overflow-y-auto max-h-[500px]">
+        <div className='flex flex-col items-center justify-start w-full gap-5 overflow-y-auto max-h-[500px]'>
           {comment.map((curr) => (
             <div
               key={curr._id}
-              className="w-full flex flex-col items-start justify-center gap-3 border p-4 rounded-md shadow-md bg-white"
-            >
-              <div className="flex items-center justify-start w-full gap-3">
+              className='w-full flex flex-col items-start justify-center gap-3 border p-4 rounded-md shadow-md bg-white'>
+              <div className='flex items-center justify-start w-full gap-3'>
                 <img
                   src={curr.user.profileImage.url}
                   alt={`${curr.user.username}'s profile`}
-                  className="w-10 h-10 rounded-full object-cover"
+                  className='w-10 h-10 rounded-full object-cover'
                 />
                 <div>
-                  <p className="font-bold">{curr.user.username}</p>
-                  <p className="text-gray-400 text-sm">
+                  <p className='font-bold'>{curr.user.username}</p>
+                  <p className='text-gray-400 text-sm'>
                     {formatDate(curr.createdAt)}
                   </p>
                 </div>
               </div>
-              <div className="w-full flex flex-col items-start justify-center gap-2">
+              <div className='w-full flex flex-col items-start justify-center gap-2'>
                 {editCommentId === curr._id ? (
-                  <div className="flex items-center justify-center w-full">
+                  <div className='flex items-center justify-center w-full'>
                     <input
-                      type="text"
-                      className="w-full border-b outline-none"
+                      type='text'
+                      className='w-full border-b outline-none'
                       value={editContent.content}
                       onChange={handleEditChange}
                     />
-                    <div className="flex items-center justify-center gap-2">
-                      <button className="p-2" onClick={handleSaveEdit}>
+                    <div className='flex items-center justify-center gap-2'>
+                      <button className='p-2' onClick={handleSaveEdit}>
                         Save
                       </button>
-                      <button className="p-2" onClick={handleCancelEdit}>
+                      <button className='p-2' onClick={handleCancelEdit}>
                         Cancel
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <p className="w-full text-gray-800">{curr.content}</p>
+                  <p className='w-full text-gray-800'>{curr.content}</p>
                 )}
 
-                <div className="flex items-center justify-start gap-2">
+                <div className='flex items-center justify-start gap-2'>
                   <button
                     onClick={() => handleToggleCommentLike(curr._id)}
                     className={`${
-                      curr.isLiked ? "text-blue-500" : "text-gray-500"
-                    }  transition-colors flex items-center justify-center`}
-                  >
+                      curr.isLiked ? 'text-blue-500' : 'text-gray-500'
+                    }  transition-colors flex items-center justify-center`}>
                     <BiSolidLike />
                     {curr.likeCount > 0 && <span>{curr.likeCount}</span>}
                   </button>
                   {curr.user._id === user?._id ? (
                     <button
                       onClick={() => handleDeleteComment(curr._id)}
-                      className="text-gray-500 hover:text-red-500 text-xl transition-colors"
-                    >
+                      className='text-gray-500 hover:text-red-500 text-xl transition-colors'>
                       <MdDelete />
                     </button>
                   ) : (
-                    ""
+                    ''
                   )}
                   {curr.user._id === user?._id ? (
                     <button
-                      className="text-gray-500"
-                      onClick={() => handleEditClick(curr._id, curr.content)}
-                    >
+                      className='text-gray-500'
+                      onClick={() => handleEditClick(curr._id, curr.content)}>
                       <CiEdit />
                     </button>
                   ) : (
-                    ""
+                    ''
                   )}
                 </div>
               </div>

@@ -28,26 +28,33 @@ const PlaylistPage = () => {
     return <div>{error}</div>;
   }
 
+  // Ensure that 'data' and required nested properties exist
+  const playlist = data || {};
+  const owner = playlist.owner || {};
+  const blogs = playlist.blogs || [];
+
   return (
     <div className='w-full h-full flex flex-col items-center justify-center p-4'>
       <div className='w-full flex flex-col items-left justify-center mt-10 gap-5 border-b p-2'>
         <div className='flex items-center justify-left gap-2'>
-          <img
-            src={data?.playlistBlogs?.owner[0].profileImage?.url}
-            alt='profileImage'
-            className='w-[4rem] h-[4rem] rounded-full'
-          />
+          {owner.profileImage?.url && (
+            <img
+              src={owner.profileImage.url}
+              alt='profileImage'
+              className='w-[4rem] h-[4rem] rounded-full'
+            />
+          )}
           <h1 className='text-3xl text-gray-500'>
-            {data?.playlistBlogs?.owner[0].username}
+            {owner.username || 'Unknown User'}
           </h1>
         </div>
-        <h1 className='text-5xl'>{data?.playList?.name}</h1>
+        <h1 className='text-5xl'>{playlist.name || 'Untitled Playlist'}</h1>
         <h3 className='text-3xl text-gray-500'>
-          {data?.playList?.description}
+          {playlist.description || 'No description available.'}
         </h3>
       </div>
       <div className='w-full h-full p-4 flex flex-col items-center gap-10'>
-        {data?.playlistBlogs?.blogs.map((curr, i) => (
+        {blogs.map((curr, i) => (
           <div
             key={i}
             className='flex flex-col md:flex-row items-center md:items-start justify-center w-full border-b p-4 gap-4'>
@@ -76,11 +83,13 @@ const PlaylistPage = () => {
                 {formatDate(curr.createdAt)}
               </p>
             </div>
-            <img
-              src={curr.coverImage?.url}
-              alt={curr.title}
-              className='w-full md:w-[300px] h-[200px] object-cover rounded-lg'
-            />
+            {curr.coverImage?.url && (
+              <img
+                src={curr.coverImage.url}
+                alt={curr.title}
+                className='w-full md:w-[300px] h-[200px] object-cover rounded-lg'
+              />
+            )}
           </div>
         ))}
       </div>
