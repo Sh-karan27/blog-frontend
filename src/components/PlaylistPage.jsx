@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router-dom';
-import { getPlaylistById } from '../store/slices/playlistSlice';
+import {
+  addBlogToPlaylist,
+  getPlaylistById,
+  removeBlogToPlaylist,
+} from '../store/slices/playlistSlice';
 import Loading from './Loading';
 import { FaBookReader } from 'react-icons/fa';
-import { CiEdit } from 'react-icons/ci';
+import { MdDeleteForever } from 'react-icons/md';
 import { MdArrowRightAlt } from 'react-icons/md';
 import { formatDate } from '../helper';
 
@@ -27,6 +31,12 @@ const PlaylistPage = () => {
   if (error) {
     return <div>{error}</div>;
   }
+
+  const handleRemoveBlog = async (playlistId, blogId) => {
+    await dispatch(removeBlogToPlaylist({ playlistId, blogId })).then(() => [
+      dispatch(getPlaylistById(playlistId)),
+    ]);
+  };
 
   // Ensure that 'data' and required nested properties exist
   const playlist = data || {};
@@ -69,8 +79,9 @@ const PlaylistPage = () => {
                   <span>{curr.views}</span>
                 </h1>
                 <div className='flex items-center gap-4'>
-                  <button onClick={() => handleEditClick(curr)}>
-                    <CiEdit className='text-gray-500 text-xl' />
+                  <button
+                    onClick={() => handleRemoveBlog(playlist?._id, curr._id)}>
+                    <MdDeleteForever className='text-gray-500 hover:text-red-500 text-xl' />
                   </button>
                 </div>
               </div>

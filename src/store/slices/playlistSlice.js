@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../axiosInstance';
+import { toast } from 'react-toastify';
 
 const initialState = {
   loading: null,
@@ -81,6 +82,40 @@ export const createPlaylist = createAsyncThunk(
   }
 );
 
+export const addBlogToPlaylist = createAsyncThunk(
+  '/playlist/blog/add',
+
+  async ({ playlistId, blogId }, { rejectWithValue }) => {
+    console.log(playlistId, blogId);
+    try {
+      const response = await axiosInstance.patch(
+        `/playlist/add/${playlistId}/${blogId}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const removeBlogToPlaylist = createAsyncThunk(
+  '/playlist/blog/remove',
+
+  async ({ playlistId, blogId }, { rejectWithValue }) => {
+    console.log(playlistId, blogId);
+    try {
+      const response = await axiosInstance.patch(
+        `/playlist/remove/${playlistId}/${blogId}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const playlistSlice = createSlice({
   name: 'playlist',
   initialState,
@@ -151,6 +186,34 @@ const playlistSlice = createSlice({
         state.loading = false;
         state.data = action.payload;
         state.error = null;
+      })
+      .addCase(addBlogToPlaylist.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addBlogToPlaylist.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(addBlogToPlaylist.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
+        toast.success('Blog added to playlist');
+      })
+      .addCase(removeBlogToPlaylist.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeBlogToPlaylist.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(removeBlogToPlaylist.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
+        toast.success('Blog removed from playlist');
       });
   },
 });
