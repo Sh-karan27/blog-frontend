@@ -63,7 +63,7 @@ export const loginUser = createAsyncThunk(
 );
 
 export const refreshAccessToken = createAsyncThunk(
-  '/user/refreshAccessToken',
+  'user/refreshAccessToken',
   async (oldRefreshToken, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post('/users/refresh-token', {
@@ -73,11 +73,9 @@ export const refreshAccessToken = createAsyncThunk(
 
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
-      console.log(response.data);
-
       return response.data;
     } catch (error) {
-      rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );

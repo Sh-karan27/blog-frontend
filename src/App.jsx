@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './sections/Home';
@@ -12,59 +13,73 @@ import SingleBlog from './components/SingleBlog';
 import PlaylistPage from './components/PlaylistPage';
 import SearchUser from './components/SearchUser';
 import Channel from './components/Channel';
-
-const ProtectedRoute = ({ element }) => {
-  const token = localStorage.getItem('accessToken');
-  return token ? element : <Navigate to='/login' />;
-};
+import { useDispatch } from 'react-redux';
+import { refreshAccessToken } from './store/slices/userSlice'; // Adjust import path as needed
 
 const App = () => {
-  const token = localStorage.getItem('accessToken');
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkTokens = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      if (refreshToken) {
+        try {
+          // Attempt to refresh tokens
+          await dispatch(refreshAccessToken(refreshToken)).unwrap();
+          setIsAuthenticated(true);
+        } catch (error) {
+          // If refresh fails, redirect to login
+          setIsAuthenticated(false);
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
+      setLoading(false);
+    };
+
+    checkTokens();
+  }, [dispatch]);
+
+  if (loading) {
+    return <div>Loading...</div>; // Or a spinner component
+  }
 
   return (
     <div className='flex flex-col min-h-screen'>
-      {token ? (
-        <BrowserRouter>
-          <Navbar />
-          <div className='flex-grow'>
-            <Routes>
-              {/* <Route path="/login" element={<Login />} /> */}
-              <Route path='/' element={<ProtectedRoute element={<Home />} />} />
-              <Route
-                path='/about'
-                element={<ProtectedRoute element={<About />} />}
-              />
-              <Route
-                path='/blogs'
-                element={<ProtectedRoute element={<Blog />} />}
-              />
-              <Route
-                path='/blog/:blogId'
-                element={<ProtectedRoute element={<SingleBlog />} />}
-              />
-              <Route
-                path='/dashboard'
-                element={<ProtectedRoute element={<Dashboard />} />}
-              />
-              <Route
-                path='/contact'
-                element={<ProtectedRoute element={<ContactUs />} />}
-              />
-              <Route path='/playlist/:playlistId' element={<PlaylistPage />} />
-              <Route path='/search' element={<SearchUser />} />
-              <Route path='/channel/:username/' element={<Channel />} />
-              <Route path='*' element={<Error />} />
-            </Routes>
-          </div>
-          <Footer />
-        </BrowserRouter>
-      ) : (
-        <BrowserRouter>
+      <BrowserRouter>
+        {isAuthenticated ? (
+          <>
+            <Navbar />
+            <div className='flex-grow'>
+              <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/about' element={<About />} />
+                <Route path='/blogs' element={<Blog />} />
+                <Route path='/blog/:blogId' element={<SingleBlog />} />
+                <Route path='/dashboard' element={<Dashboard />} />
+                <Route path='/contact' element={<ContactUs />} />
+                <Route
+                  path='/playlist/:playlistId'
+                  element={<PlaylistPage />}
+                />
+                <Route path='/search' element={<SearchUser />} />
+                <Route path='/channel/:username/' element={<Channel />} />
+                <Route path='*' element={<Error />} />
+              </Routes>
+            </div>
+            <Footer />
+          </>
+        ) : (
           <Routes>
             <Route path='/login' element={<Login />} />
+            <Route path='*' element={<Navigate to='/login' />} />
           </Routes>
-        </BrowserRouter>
-      )}
+        )}
+      </BrowserRouter>
     </div>
   );
 };
