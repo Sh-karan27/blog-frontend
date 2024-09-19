@@ -9,7 +9,6 @@ import Error from './sections/Error';
 import Login from './components/LogIn';
 import Dashboard from './sections/Dashboard';
 import SingleBlog from './components/SingleBlog';
-import Cookies from 'js-cookie';
 import PlaylistPage from './components/PlaylistPage';
 import SearchUser from './components/SearchUser';
 import Channel from './components/Channel';

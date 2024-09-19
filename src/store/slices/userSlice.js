@@ -49,14 +49,35 @@ export const loginUser = createAsyncThunk(
         email,
         password,
       });
-      const { accessToken, user } = response.data.data;
+      const { accessToken, user, refreshToken } = response.data.data;
 
       localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
       console.log(response.data);
 
       return { user, token: accessToken };
     } catch (error) {
       return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const refreshAccessToken = createAsyncThunk(
+  '/user/refreshAccessToken',
+  async (oldRefreshToken, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post('/users/refresh-token', {
+        refreshToken: oldRefreshToken,
+      });
+      const { accessToken, refreshToken } = response.data.data;
+
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      console.log(response.data);
+
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data);
     }
   }
 );
@@ -106,6 +127,7 @@ export const logoutUser = createAsyncThunk(
     try {
       await axiosInstance.post('/users/logout');
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       return true;
     } catch (error) {
       return rejectWithValue(error.response.data);
