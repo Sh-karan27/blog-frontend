@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './sections/Home';
@@ -8,7 +7,6 @@ import Footer from './components/Footer';
 import ContactUs from './sections/ContactUs';
 import Error from './sections/Error';
 import Login from './components/LogIn';
-import { useSelector } from 'react-redux';
 import Dashboard from './sections/Dashboard';
 import SingleBlog from './components/SingleBlog';
 import Cookies from 'js-cookie';
