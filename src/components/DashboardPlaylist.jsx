@@ -16,6 +16,7 @@ const DashboardPlaylist = ({ id }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   const { data = [], loading, error } = useSelector((state) => state.playlist);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (id) {
@@ -60,13 +61,17 @@ const DashboardPlaylist = ({ id }) => {
   return (
     <div className='w-full max-w-screen-lg mx-auto p-4 flex flex-col items-center gap-10'>
       {/* Simplified button for testing */}
-      <div className='w-full'>
-        <button
-          className='bg-blue-500 text-white p-2 rounded-md'
-          onClick={handleCreatePlaylist}>
-          Add Playlist
-        </button>
-      </div>
+      {id === user._id ? (
+        <div className='w-full'>
+          <button
+            className='bg-blue-500 text-white p-2 rounded-md'
+            onClick={handleCreatePlaylist}>
+            Add Playlist
+          </button>
+        </div>
+      ) : (
+        ''
+      )}
 
       {/* Playlist rendering */}
       <div className='flex flex-wrap justify-center gap-4'>

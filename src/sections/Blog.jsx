@@ -3,14 +3,18 @@ import { searchBlogs } from '../store/slices/blogSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../components/Loading';
 import { NavLink } from 'react-router-dom';
-import { MdArrowRightAlt } from 'react-icons/md';
+import { MdArrowRightAlt, MdOutlinePlaylistAdd } from 'react-icons/md';
 import { FaBookReader } from 'react-icons/fa';
 import { formatDate } from '../helper';
+import AddToPlaylist from '../components/AddToPlaylist';
+import { userProfile } from '../store/slices/userSlice';
 
 const Blog = () => {
   // State to manage search query and filters
+
+  const [addBlogInPlayList, setAddBlogInPlayList] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
-    query: 'batman',
+    query: 'a',
     sortBy: 'views',
     sortType: 'dsc',
     limit: 10,
@@ -20,8 +24,20 @@ const Blog = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const fetchData = async () => {
+      await dispatch(userProfile());
+    };
+    fetchData();
+  }, [dispatch]);
+
+  useEffect(() => {
     dispatch(searchBlogs(searchQuery));
   }, [dispatch]);
+
+  const { user } = useSelector((state) => state.auth);
+
+  const userId = user?._id;
+  console.log(userId);
 
   const { loading, error, searchBlogData } = useSelector((state) => state.blog);
 
@@ -51,6 +67,10 @@ const Blog = () => {
   // if (Array.isArray(searchBlogData) && searchBlogData.length === 0) {
   //   return <div>Blog not found</div>;
   // }
+
+  const closePlaylistModel = () => {
+    setAddBlogInPlayList(!addBlogInPlayList);
+  };
 
   console.log(searchBlogData);
 
@@ -111,7 +131,7 @@ const Blog = () => {
           searchBlogData.map((curr, i) => (
             <div
               key={i}
-              className='flex flex-col md:flex-row items-center md:items-start justify-between w-full border-b p-4 gap-4'>
+              className='flex flex-col md:flex-row items-center md:items-start justify-evenly w-full border-b p-4 gap-4'>
               <div className='flex flex-col items-start justify-start p-4 w-full md:w-1/2 gap-2'>
                 <h1 className='font-bold text-lg mb-2'>{curr.title}</h1>
                 <p className='text-sm text-gray-600 mb-4 line-clamp-3'>
@@ -121,6 +141,12 @@ const Blog = () => {
                   <h1 className='text-sm text-gray-500 flex items-center gap-1'>
                     <FaBookReader className='text-blue-500' />
                     <span>{curr.views}</span>
+                  </h1>
+                  <h1
+                    className='text-sm text-gray-500 flex items-center'
+                    onClick={() => closePlaylistModel()}>
+                    <MdOutlinePlaylistAdd className='text-blue-500' />
+                    AddToPlaylist
                   </h1>
                 </div>
                 <NavLink
@@ -137,6 +163,14 @@ const Blog = () => {
                 alt={curr.title}
                 className='w-full md:w-[300px] h-[200px] object-cover rounded-lg'
               />
+
+              {addBlogInPlayList && (
+                <AddToPlaylist
+                  toggleOpen={closePlaylistModel}
+                  id={userId}
+                  blogId={curr._id}
+                />
+              )}
             </div>
           ))
         ) : (

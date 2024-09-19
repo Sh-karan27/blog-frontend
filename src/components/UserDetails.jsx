@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { ImCross } from 'react-icons/im';
 import { useDispatch } from 'react-redux';
 import { updateAccountDetails } from '../store/slices/userSlice';
 import { IoIosArrowBack } from 'react-icons/io';

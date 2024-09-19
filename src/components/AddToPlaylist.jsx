@@ -34,7 +34,7 @@ const AddToPlaylist = ({ toggleOpen, id, blogId }) => {
   };
 
   return (
-    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 p-4'>
+    <div className='fixed inset-0 flex items-center justify-center  p-4'>
       <div className='w-full max-w-2xl bg-white rounded-lg shadow-lg p-6 relative'>
         <button
           className='absolute top-4 left-4 text-gray-700 hover:text-blue-600 flex items-center'
