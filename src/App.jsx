@@ -76,7 +76,7 @@ const App = () => {
         ) : (
           <Routes>
             <Route path='/' element={<Login />} />
-            <Route path='*' element={<Navigate to='/' />} />
+            <Route path='*' element={<Login />} />
           </Routes>
         )}
       </BrowserRouter>
